@@ -37,6 +37,15 @@
     font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
     color:var(--soft);margin:0 0 18px;
   }
+  /* Возврат на полку. Путь относительный: books/<slug>/ → корень */
+  .back{
+    display:inline-block;font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--mute);text-decoration:none;margin:0 0 14px;
+    border-bottom:1px solid transparent;transition:color .15s,border-color .15s;
+  }
+  .back:hover{color:var(--ink);border-bottom-color:#C3C9D6;}
+  .back:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
   h1{
     font-family:"Unbounded","Golos Text",sans-serif;font-weight:800;
     font-size:clamp(38px,8.4vw,86px);line-height:.98;letter-spacing:-.02em;margin:0;
@@ -56,12 +65,6 @@
     color:var(--mute);margin:16px 0 0;line-height:1.6;
   }
   .lede{font-size:clamp(16px,2.4vw,20px);max-width:48ch;color:var(--soft);margin:20px 0 0;}
-  .facts{
-    display:flex;flex-wrap:wrap;gap:10px 14px;margin:28px 0 0;padding:0;list-style:none;
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--soft);
-  }
-  .facts b{color:var(--ink);font-weight:600;}
-  .facts li:not(:last-child)::after{content:"•";margin-left:14px;color:#A8B0C0;}
   .author{
     margin:30px 0 0;padding:18px 20px;background:#F6F7FA;border:1px solid var(--line2);
     border-radius:14px;border-left:3px solid var(--c-gen);max-width:72ch;
@@ -107,14 +110,15 @@
   .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
   .chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
     margin-right:7px;vertical-align:1px;background:currentColor;}
-  .tally{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;
-    color:var(--mute);letter-spacing:.05em;}
 
   /* SECTIONS */
   /* main.wrap, а не main: .wrap задаёт padding:0 20px и по специфичности
      перебивает голый тег — вертикальные отступы иначе не применяются. */
-  main.wrap{padding:34px 20px 80px;}
+  main.wrap{padding:34px 20px 18px;}
   .sect{margin:0 0 52px;scroll-margin-top:140px;}
+  /* У последнего раздела поле снизу лишнее — оно складывалось с отступом main
+     и давало огромный провал перед футером. */
+  .sect:last-child{margin-bottom:0;}
   .sect-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
     padding:0 0 14px;margin:0 0 18px;border-bottom:1px solid var(--line);}
   .sect-head h2{font-family:"Unbounded","Golos Text",sans-serif;font-weight:600;
@@ -166,13 +170,42 @@
   footer a{color:var(--soft);text-decoration:underline;text-underline-offset:2px;}
   footer a:hover{color:var(--ink);}
 
+  /* Полоса прочитанного. Тянется по верхней кромке окна поверх липкой панели.
+     Ширину гоню через scaleX — трансформации дешевле, чем пересчёт width.
+     Именно 100vw, а не 100%: процент у фиксированного элемента считается от
+     области содержимого и не достаёт до края окна на ширину скроллбара. */
+  .progress{
+    position:fixed;left:0;top:0;height:3px;width:100vw;z-index:40;
+    transform:scaleX(0);transform-origin:0 50%;pointer-events:none;
+    background:linear-gradient(90deg,#6E8FE0 0%,#47B7A4 25%,#D9A03C 50%,#B76FB0 75%,#8878D2 100%);
+  }
+
+  /* Возврат наверх. Появляется, когда прокрутили больше половины страницы */
+  .totop{
+    position:fixed;left:22px;bottom:22px;z-index:30;
+    width:44px;height:44px;border-radius:50%;padding:0;
+    border:1px solid var(--line);background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    color:var(--ink);font:inherit;font-size:18px;line-height:1;cursor:pointer;
+    display:grid;place-items:center;
+    box-shadow:0 10px 26px -14px rgba(23,26,33,.45);
+    opacity:0;visibility:hidden;transform:translateY(8px);
+    transition:opacity .2s ease,transform .2s ease,visibility .2s,border-color .15s;
+  }
+  .totop.on{opacity:1;visibility:visible;transform:none;}
+  .totop:hover{border-color:#A8B0C0;}
+  .totop:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+
   @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
 </style>
 </head>
 <body>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
+
 <header class="hero">
   <div class="wrap">
+    <a class="back" href="../../">← Book Notes</a>
     <p class="eyebrow">Карл Вигерс</p>
     <h1>Жемчужины<br>разработки</h1>
     <p class="subtitle">Чему мы научились за 50 лет создания ПО</p>
@@ -191,7 +224,6 @@
   <div class="wrap">
     <input class="search" id="q" type="search" placeholder="Поиск по урокам — «оценка», «ревью», «риск»…" aria-label="Поиск по урокам">
     <div class="chips" id="chips" role="group" aria-label="Фильтр по разделам"></div>
-    <span class="tally" id="tally"></span>
   </div>
 </div>
 
@@ -209,6 +241,8 @@
     <p>Пояснения к урокам и резюме введений — сжатый пересказ, а не текст книги. Примеры, кейсы и разделы «первые шаги» / «следующие шаги» остались в оригинале.</p>
   </div>
 </footer>
+
+<button class="totop" id="totop" type="button" aria-label="Наверх" title="Наверх">↑</button>
 
 <script>
 const CATS = [
@@ -324,8 +358,7 @@ const L = [
 ];
 
 const main=document.getElementById('main'), chipsBox=document.getElementById('chips'),
-      tally=document.getElementById('tally'), empty=document.getElementById('empty'),
-      q=document.getElementById('q');
+      empty=document.getElementById('empty'), q=document.getElementById('q');
 let active='all';
 
 CATS.forEach(c=>{
@@ -373,9 +406,26 @@ function apply(){
     shown+=n;
   });
   document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed', b.dataset.cat===active));
-  tally.textContent = shown===60 ? 'Показаны все 60 уроков' : `Показано ${shown} из 60`;
   empty.hidden = shown>0;
+  onScroll();
 }
+
+/* Полоса прочитанного и кнопка «наверх». Оба считаются от прокручиваемой
+   высоты, а она меняется при фильтрации, — поэтому onScroll зовётся и из apply. */
+const toTop=document.getElementById('totop'), bar=document.getElementById('progress');
+function onScroll(){
+  const scrollable=document.documentElement.scrollHeight-innerHeight;
+  const read = scrollable>0 ? Math.min(scrollY/scrollable,1) : 0;
+  bar.style.transform=`scaleX(${read})`;
+  toTop.classList.toggle('on', scrollable>240 && scrollY>scrollable/2);
+}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',onScroll);
+toTop.addEventListener('click',()=>{
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+});
+
 q.addEventListener('input',apply);
 apply();
 </script>
