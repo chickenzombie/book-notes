@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Исходники книг здесь не место — только конспекты
+*.pdf
+*.epub
+*.fb2
+*.mobi
+*.djvu
+
+# Черновики
+draft/
+*.draft.html

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book Notes — визуальные конспекты книг</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --shell:#EDEFF3; --ink:#171A21; --soft:#5B616E; --mute:#8A91A0;
+    --card:#FFFFFF; --line:#D5DAE3; --line2:#E1E5EC;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--shell);color:var(--ink);
+    font-family:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px;}
+
+  .hero{
+    padding:64px 0 44px;
+    background:
+      radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
+      radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
+      radial-gradient(90% 70% at 50% 100%, #EFEAF9 0%, rgba(239,234,249,0) 70%),
+      var(--shell);
+  }
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--soft);margin:0 0 18px;
+  }
+  h1{
+    font-family:"Unbounded","Golos Text",sans-serif;font-weight:800;
+    font-size:clamp(36px,7.6vw,74px);line-height:1;letter-spacing:-.02em;margin:0;
+    background:linear-gradient(100deg,#2A3550 0%,#6E8FE0 18%,#47B7A4 34%,
+      #D9A03C 50%,#B76FB0 66%,#8878D2 82%,#2A3550 100%);
+    background-size:260% 100%;-webkit-background-clip:text;background-clip:text;
+    color:transparent;animation:nacre 22s linear infinite;
+  }
+  @keyframes nacre{0%{background-position:0% 50%;}100%{background-position:260% 50%;}}
+  .lede{font-size:clamp(16px,2.4vw,19px);max-width:56ch;color:var(--soft);margin:14px 0 0;}
+  .note{
+    margin:28px 0 0;padding:16px 18px;border-left:2px solid #C3C9D6;
+    max-width:64ch;font-size:14px;color:var(--soft);
+  }
+
+  /* main.wrap, а не main: .wrap задаёт padding:0 20px и по специфичности
+     перебивает голый тег — вертикальные отступы иначе не применяются. */
+  /* Снизу 18px — столько же, сколько от линии заголовка до карточек:
+     полка получает одинаковый просвет сверху и снизу. */
+  main.wrap{padding:44px 20px 18px;}
+  .count{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--mute);
+    margin:0 0 18px;padding:0 0 14px;border-bottom:1px solid var(--line);
+  }
+  .shelf{display:grid;gap:16px;grid-template-columns:1fr;}
+  @media (min-width:760px){.shelf{grid-template-columns:1fr 1fr;}}
+  @media (min-width:1080px){.shelf{grid-template-columns:1fr 1fr 1fr;}}
+
+  .book{
+    position:relative;display:flex;flex-direction:column;gap:11px;
+    background:var(--card);border:1px solid var(--line2);border-radius:16px;
+    padding:22px 22px 24px 26px;text-decoration:none;color:inherit;overflow:hidden;
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  .book::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:linear-gradient(180deg,var(--a1),var(--a2));
+  }
+  .book:hover{transform:translateY(-3px);border-color:#D2D8E2;
+    box-shadow:0 14px 32px -18px rgba(23,26,33,.36);}
+  .book h2{
+    font-family:"Unbounded","Golos Text",sans-serif;font-weight:600;
+    font-size:17.5px;line-height:1.25;letter-spacing:-.01em;margin:0;
+  }
+  .meta{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11.5px;color:var(--mute);margin:0;
+  }
+  /* Вторая строка — оригинальное издание, приглушённее первой */
+  .meta.orig{color:#A2A9B8;margin-top:-7px;}
+  .book p.desc{margin:0;font-size:14px;color:var(--soft);}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none;}
+  .tags li{
+    font-size:11.5px;padding:3px 9px;border-radius:999px;
+    background:#F1F3F7;color:var(--soft);border:1px solid var(--line2);
+  }
+  .badge{
+    align-self:flex-start;margin-top:2px;
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
+    letter-spacing:.06em;color:var(--ink);font-weight:600;
+  }
+
+  .soon{
+    border:1px dashed #C6CDD9;background:transparent;
+    display:flex;flex-direction:column;justify-content:center;gap:6px;
+    padding:26px;border-radius:16px;color:var(--mute);
+  }
+  .soon strong{
+    display:block;font-family:"Unbounded","Golos Text",sans-serif;
+    font-weight:600;font-size:15px;color:var(--soft);
+  }
+  .soon span{font-size:13.5px;}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 46px;font-size:13px;color:var(--mute);}
+  footer p{margin:0 0 8px;max-width:76ch;}
+  footer a{color:var(--soft);text-decoration:underline;text-underline-offset:2px;}
+  footer a:hover{color:var(--ink);}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Личная библиотека конспектов</p>
+    <h1>Book Notes</h1>
+    <p class="lede">Прочитанные книги — в виде одностраничных выжимок. Начал с разработки и тестирования, дальше — что попадётся. Только то, что остаётся после чтения, с поиском и фильтрами.</p>
+    <p class="note">Каждый конспект — самодостаточный HTML-файл: без сборки, зависимостей и внешних скриптов. Скачал, открыл в браузере, работает. Конспект не заменяет книгу и не пересказывает её целиком — примеры, доказательства и разборы остаются в оригинале.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="count" id="count"></p>
+  <div class="shelf" id="shelf"></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Все права на исходные книги принадлежат их авторам и издательствам. Конспекты некоммерческие, пишутся для себя и книги не заменяют: если материал оказался полезен — купите оригинал, ссылки есть на каждой странице.</p>
+    <p>Разработано <a href="https://github.com/chickenzombie">chickenzombie</a> с помощью
+      <a href="https://claude.com/claude-code">Claude Code</a> на модели Claude Opus 5 · 2026</p>
+  </div>
+</footer>
+
+<script>
+/* Чтобы добавить книгу — допишите объект в массив и положите страницу в books/<slug>/index.html */
+const BOOKS = [
+  {
+    slug:'zhemchuzhiny-razrabotki',
+    title:'Жемчужины разработки. Чему мы научились за 50 лет создания ПО',
+    author:'Карл Вигерс',
+    year:2024,
+    publisher:'Питер',
+    origTitle:'Software Development Pearls',
+    origPublisher:'Addison-Wesley',
+    origYear:2021,
+    badge:'60 уроков',
+    desc:'Полвека опыта в шести темах: требования, проектирование, управление проектами, культура, качество и процессы. Ни один урок не про технологию — все про места, где команды спотыкаются снова и снова.',
+    tags:['Требования','Управление','Качество','Процессы'],
+    accent:['#6E8FE0','#8878D2']
+  }
+];
+
+const shelf=document.getElementById('shelf');
+
+BOOKS.forEach(b=>{
+  const a=document.createElement('a');
+  a.className='book';
+  a.href=`books/${b.slug}/`;
+  a.style.setProperty('--a1',b.accent[0]);
+  a.style.setProperty('--a2',b.accent[1]);
+  a.innerHTML=`
+    <h2>${b.title}</h2>
+    <p class="meta">${b.author} · ${b.publisher}, ${b.year}</p>
+    ${b.origTitle ? `<p class="meta orig">${b.origTitle} · ${b.origPublisher}, ${b.origYear}</p>` : ''}
+    <p class="desc">${b.desc}</p>
+    <ul class="tags">${b.tags.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <span class="badge">${b.badge} →</span>`;
+  shelf.appendChild(a);
+});
+
+const soon=document.createElement('div');
+soon.className='soon';
+soon.innerHTML=`<strong>Следующая книга</strong><span>Полка пополняется по мере чтения.</span>`;
+shelf.appendChild(soon);
+
+document.getElementById('count').textContent =
+  BOOKS.length === 1 ? '1 конспект на полке' : `${BOOKS.length} конспекта(ов) на полке`;
+</script>
+</body>
+</html>
