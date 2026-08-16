@@ -15,9 +15,15 @@
                  наведении — тот же перламутр, только тише */
 
 :root{
-  /* Полотно: тёплая жемчужная гамма вместо серой */
-  --shell:#F1EEE9; --ink:#1A1714; --soft:#5C564E; --mute:#8C857B;
-  --card:#FDFCFA; --line:#DCD5CA; --line2:#E7E1D7; --sunk:#F7F4EF;
+  /* Полотно: тёплая жемчужная гамма вместо серой. Тёмная тема — та же
+     створка, что в шапке: страница целиком уходит внутрь раковины. */
+  --shell:light-dark(#F1EEE9,#111820); --ink:light-dark(#1A1714,#ECE7DF);
+  --soft:light-dark(#5C564E,#A8A196);  --mute:light-dark(#8C857B,#7E776C);
+  --card:light-dark(#FDFCFA,#1A2028);  --line:light-dark(#DCD5CA,#2E353E);
+  --line2:light-dark(#E7E1D7,#242B33); --sunk:light-dark(#F7F4EF,#151C24);
+  /* Слои перламутра на полотне */
+  --rings:light-dark(rgba(140,118,86,.055),rgba(190,205,225,.05));
+  --sheen:light-dark(rgba(47,110,122,.05),rgba(47,110,122,.12));
 
   --font-display:"Playfair Display",Georgia,"Times New Roman",serif;
   --font-body:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -34,6 +40,19 @@
 
   /* Створка раковины: чем глубже, тем темнее */
   --deep:#0E1720; --deep-2:#16232F;
+}
+
+/* ПОЛОТНО. Перламутр нарастает слоями — значит, слои идут по всей странице,
+   а не заканчиваются вместе с шапкой. Кольца те же, что на створке, только
+   расходятся от левого верхнего угла и держатся при прокрутке: раковина
+   раскрыта, и мы смотрим внутрь неё всю дорогу. */
+body{
+  background:
+    repeating-radial-gradient(circle at 4% 0%,
+      var(--rings) 0 1px, transparent 1px 34px),
+    radial-gradient(120% 60% at 90% 12%, var(--sheen), transparent 60%),
+    var(--shell);
+  background-attachment:fixed;
 }
 
 /* ШАПКА — тёмная створка ------------------------------------------------ */
@@ -61,6 +80,13 @@
   border-bottom:1px solid transparent;transition:color .15s,border-color .15s;
 }
 .back:hover{color:#fff;border-bottom-color:rgba(255,255,255,.4);}
+/* Переключатель стоит на тёмной створке в обеих темах, поэтому и в светлой
+   он здесь не белый: белая пуговица на створке смотрелась бы наклейкой. */
+.hero .theme{
+  background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);
+  color:rgba(237,232,224,.72);
+}
+.hero .theme:hover{color:#fff;border-color:rgba(255,255,255,.4);}
 .eyebrow{
   font-family:var(--font-mono);font-size:11.5px;letter-spacing:.18em;
   text-transform:uppercase;color:rgba(237,232,224,.66);margin:0 0 14px;
@@ -124,36 +150,83 @@
 .sect-head .range{letter-spacing:.02em;}
 
 /* Жемчужина: блик сверху слева, тень снизу, ободок цвета главы */
+/* Цифра тёмная всегда: жемчужина светлая в обеих темах, и var(--ink) в
+   тёмной сделал бы светлое по светлому. */
 .marker{
-  width:32px;height:32px;color:var(--ink);font-size:12px;
+  width:32px;height:32px;color:#1A1714;font-size:12px;
   background:
     radial-gradient(circle at 34% 28%, #FFFFFF 0%, rgba(255,255,255,0) 46%),
     radial-gradient(circle at 62% 76%, rgba(0,0,0,.10) 0%, rgba(0,0,0,0) 52%),
     linear-gradient(150deg,#FFFDF9 0%,#F0E9DE 100%);
-  box-shadow:0 0 0 1.5px var(--hue), 0 2px 5px -2px rgba(26,23,20,.42);
+  box-shadow:0 0 0 1.5px var(--hue), 0 2px 5px -2px light-dark(rgba(26,23,20,.42),rgba(0,0,0,.6));
 }
 
 .card{position:relative;overflow:hidden;}
-/* Перламутровый отлив по верхней кромке — только при наведении */
+/* Верхняя кромка цветом главы — только при наведении. Заливка сплошная во
+   всю ширину: полоска обрывалась на середине и читалась как недоделка.
+   overflow:hidden у карточки подрезает её по скруглению. */
 .card::after{
   content:"";position:absolute;left:0;right:0;top:0;height:2px;
-  background:linear-gradient(90deg,var(--hue),transparent 70%);
+  background:var(--hue);
   opacity:0;transition:opacity .18s ease;
 }
-.card:hover{border-color:var(--line);box-shadow:0 12px 28px -16px rgba(26,23,20,.34);}
+.card:hover{border-color:var(--line);box-shadow:0 12px 28px -16px light-dark(rgba(26,23,20,.34),rgba(0,0,0,.62));}
 .card:hover::after{opacity:1;}
 .card h3{font-size:15.5px;line-height:1.36;}
 
 .intro{border-left-width:2px;}
 .intro em{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:1.06em;}
 
+/* ПАНЕЛЬ ПОИСКА. Круглое здесь везде: жемчужина, ободок маркера, таблетка
+   чипса. Панель лежит на утопленном тёплом полотне, а не на белом. */
+.controls{background:var(--sunk);border-bottom:1px solid var(--line);}
+.search{
+  border-radius:999px;padding-left:18px;border-color:var(--line);
+  font-size:14.5px;
+}
+.search::placeholder{font-style:italic;}
+.chip{padding:7px 14px;}
+/* Точка на чипсе — та же жемчужина, что в маркере: ободок вместо заливки */
+.chip .dot{box-shadow:0 0 0 1.5px rgba(26,23,20,.10);}
+.chip[aria-pressed="true"] .dot{box-shadow:0 0 0 1.5px rgba(255,255,255,.35);}
+
+/* ШАПКА РАЗДЕЛА — тонкая линия, как ребро створки */
+.sect-head{border-bottom-color:var(--line);}
+.sect-head h2{font-weight:700;letter-spacing:-.005em;}
+.range{letter-spacing:.02em;}
+
+/* ВВЕДЕНИЕ — перламутровый отлив по левой кромке вместо ровной заливки */
+.intro{
+  border-left-width:2px;border-radius:var(--radius);
+  background:linear-gradient(100deg,light-dark(rgba(255,255,255,.55),rgba(255,255,255,.05)),var(--sunk) 40%);
+}
+.intro em{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:1.06em;}
+
 .empty strong{font-family:var(--font-display);font-weight:700;font-size:22px;}
 .reset{
-  margin:14px 0 0;font:inherit;font-size:13px;padding:8px 16px;
+  margin:14px 0 0;font:inherit;font-size:13px;padding:8px 18px;
   border:1px solid var(--line);border-radius:999px;
   background:var(--card);color:var(--soft);cursor:pointer;
 }
 .reset:hover{border-color:var(--mute);color:var(--ink);}
 
-footer{margin-top:56px;}
+/* Кнопка «наверх» — жемчужина: блик сверху слева, как у маркера */
+.totop{
+  border-color:var(--line);
+  background:
+    radial-gradient(circle at 34% 28%, light-dark(#FFFFFF,rgba(255,255,255,.55)) 0%, transparent 52%),
+    linear-gradient(150deg,light-dark(#FDFCFA,#232A33) 0%,light-dark(#F2ECE2,#1A2028) 100%);
+  color:var(--ink);
+}
+.totop:hover{border-color:var(--mute);}
+
+footer{margin-top:56px;border-top:1px solid var(--line);}
 footer .cite{color:var(--soft);}
+footer .home{
+  display:inline-block;font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+  text-decoration:none;padding:7px 16px;border:1px solid var(--line2);
+  border-radius:999px;background:var(--card);
+  transition:color .15s,border-color .15s;
+}
+footer .home:hover{color:var(--ink);border-color:var(--accent);}

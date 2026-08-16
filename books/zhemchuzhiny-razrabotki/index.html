@@ -20,10 +20,10 @@
 <link rel="stylesheet" href="../../assets/fonts.css">
 <link rel="stylesheet" href="../../assets/base.css">
 <link rel="stylesheet" href="theme.css">
-<!-- Ставит класс до первой отрисовки: интерфейс поиска появляется
-     сразу, а не вклинивается в поток после загрузки скрипта. -->
-<script>document.documentElement.classList.add("js")</script>
+<!-- Ставит выбранную тему до первой отрисовки, иначе страница мигнёт светлой -->
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="../../assets/notes.js" defer></script>
+<script src="../../assets/theme.js" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <a class="back" href="../../">← Book Notes</a>
+    <div class="topbar"><a class="back" href="../../">← Book Notes</a> <button class="theme" id="theme" type="button" aria-label="Переключить тему"><span class="to-dark" aria-hidden="true">◐</span><span class="to-light" aria-hidden="true">◑</span></button></div>
     <p class="eyebrow">Карл Вигерс</p>
     <h1>Жемчужины<br>разработки</h1>
     <p class="subtitle">Чему мы научились за 50 лет создания ПО</p>
@@ -483,6 +483,7 @@
     <p class="cite">Формулировки уроков приведены по русскому изданию: Карл Вигерс. <a href="https://www.piter.com/product/zhemchuzhiny-razrabotki-chemu-my-nauchilis-za-50-let-sozdaniya-po">«Жемчужины разработки. Чему мы научились за 50 лет создания ПО»</a>. — СПб.: Питер, 2024. ISBN 978-5-4461-1986-8. Оригинал: Karl Wiegers. Software Development Pearls. Addison-Wesley, 2021.</p>
     <p>Публикуется с разрешения издательства «Питер» для некоммерческого использования. Никакие части книги не могут быть использованы без согласования с издательством. Права на перевод — ООО «Прогресс книга».</p>
     <p>Пояснения к урокам и резюме введений — сжатый пересказ, а не текст книги. Примеры, кейсы и разделы «первые шаги» / «следующие шаги» остались в оригинале.</p>
+    <p><a class="home" href="../../">← Все конспекты</a></p>
   </div>
 </footer>
 

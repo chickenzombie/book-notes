@@ -18,9 +18,19 @@
    с антиквой. Эта нарочно во всём наоборот. */
 
 :root{
-  /* Полотно: холоднее и суше, чем у соседа по полке */
-  --shell:#EFF2F6; --ink:#14181F; --soft:#555C69; --mute:#868D9B;
-  --card:#FFFFFF; --line:#D3D9E2; --line2:#E3E7EE; --sunk:#F5F7FA;
+  /* Полотно: холоднее и суше, чем у соседа по полке. В тёмной теме — не
+     серый, а синька: приборный лист, снятый с подсветки. */
+  --shell:light-dark(#EFF2F6,#0F131A); --ink:light-dark(#14181F,#E5EAF2);
+  --soft:light-dark(#555C69,#A2AAB9);  --mute:light-dark(#868D9B,#767E8D);
+  --card:light-dark(#FFFFFF,#171C24);  --line:light-dark(#D3D9E2,#2E3540);
+  --line2:light-dark(#E3E7EE,#232932); --sunk:light-dark(#F5F7FA,#131820);
+  /* Миллиметровка и засветка сверху: на тёмном линии светлеют, а белая
+     дымка становится глубокой синевой. */
+  --grid:light-dark(rgba(91,107,127,.07),rgba(150,175,215,.075));
+  --grid-fine:light-dark(rgba(91,107,127,.035),rgba(150,175,215,.04));
+  --grid-soft:light-dark(rgba(91,107,127,.045),rgba(150,175,215,.05));
+  --grid-soft2:light-dark(rgba(91,107,127,.022),rgba(150,175,215,.025));
+  --wash:light-dark(rgba(255,255,255,.85),rgba(30,42,60,.55));
 
   --font-display:"Unbounded","Golos Text",sans-serif;
   --font-body:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -51,24 +61,30 @@
     var(--c-8),var(--c-9),var(--c-10),var(--c-11),var(--c-12),var(--c-13));
 }
 
-/* ШАПКА
-   Миллиметровка на фоне — две сетки, крупная и мелкая. Держу её очень
-   бледной: это фактура приборной бумаги, а не элемент, который читают. */
+/* ПОЛОТНО. Приборная бумага лежит под всей страницей, а не только под
+   шапкой: измеряют не первый экран, а весь материал. Здесь сетка тише —
+   карточки перекрывают её, и она видна только в просветах между ними. */
+body{
+  background:
+    repeating-linear-gradient(0deg,var(--grid-soft) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(90deg,var(--grid-soft) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(0deg,var(--grid-soft2) 0 1px,transparent 1px 14px),
+    repeating-linear-gradient(90deg,var(--grid-soft2) 0 1px,transparent 1px 14px),
+    var(--shell);
+  background-attachment:fixed;
+}
+
+/* ШАПКА. Та же миллиметровка, но в полную силу и с засветкой сверху:
+   первый экран — разворот приборного листа. */
 .hero{
   position:relative;padding:56px 0 44px;overflow:hidden;
   background:
-    linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 42%),
-    repeating-linear-gradient(0deg,rgba(91,107,127,.07) 0 1px,transparent 1px 56px),
-    repeating-linear-gradient(90deg,rgba(91,107,127,.07) 0 1px,transparent 1px 56px),
-    repeating-linear-gradient(0deg,rgba(91,107,127,.035) 0 1px,transparent 1px 14px),
-    repeating-linear-gradient(90deg,rgba(91,107,127,.035) 0 1px,transparent 1px 14px),
+    linear-gradient(180deg,var(--wash) 0%,transparent 42%),
+    repeating-linear-gradient(0deg,var(--grid) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(0deg,var(--grid-fine) 0 1px,transparent 1px 14px),
+    repeating-linear-gradient(90deg,var(--grid-fine) 0 1px,transparent 1px 14px),
     var(--shell);
-}
-/* Сетка не должна доходить до контента внизу — растворяем её в полотно */
-.hero::after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:180px;
-  background:linear-gradient(180deg,rgba(239,242,246,0),var(--shell));
-  pointer-events:none;
 }
 .hero .wrap{position:relative;z-index:1;}
 
@@ -125,7 +141,7 @@
 .card{border-left:3px solid var(--hue);}
 .card h3{font-size:15px;line-height:1.36;}
 .card p{font-size:13.5px;}
-.card:hover{box-shadow:0 10px 26px -14px rgba(20,24,31,.32);}
+.card:hover{box-shadow:0 10px 26px -14px light-dark(rgba(20,24,31,.32),rgba(0,0,0,.65));}
 
 /* МАРКЕР — чип статуса, а не медаль. Квадрат со скруглением, моноширинный.
    Там, где буква мнемоники (S, T, R, I, D, E у STRIDE и так далее), она
@@ -176,14 +192,65 @@
 /* В длинных списках (тридцать CFR) первый столбец переносить можно */
 .ref.wide td:first-child{white-space:normal;min-width:14ch;}
 
+/* ПАНЕЛЬ ПОИСКА — приборная. Поле ввода и кнопки фильтра повторяют форму
+   маркера: скруглённый квадрат вместо таблетки. Круглых форм на этой
+   странице нет вообще — она измеряет, а не разговаривает. */
+.controls{background:var(--sunk);border-bottom:1px solid var(--line);}
+.search{
+  border-radius:var(--radius-sm);border-color:var(--line);
+  font-size:14.5px;
+}
+.search::placeholder{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.01em;}
+.chip{
+  border-radius:7px;font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.02em;padding:7px 11px;
+}
+.chip .dot{border-radius:2px;width:6px;height:6px;}
+.status{letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;}
+
+/* ШАПКА РАЗДЕЛА — деление шкалы: короткий штрих цвета главы под линией */
+.sect-head{position:relative;border-bottom-color:var(--line);}
+.sect-head::after{
+  content:"";position:absolute;left:0;bottom:-1px;width:46px;height:2px;
+  background:var(--hue);
+}
+.range{
+  letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;
+  padding:3px 7px;border:1px solid var(--line2);border-radius:4px;
+  background:var(--card);
+}
+
+/* ВВЕДЕНИЕ К ГЛАВЕ — тот же приборный лист, что в шапке, только тише */
+.intro{
+  border-radius:var(--radius-sm);
+  background:
+    repeating-linear-gradient(0deg,var(--grid-soft2) 0 1px,transparent 1px 14px),
+    var(--sunk);
+}
+.intro .label{letter-spacing:.14em;}
+.intro em{font-style:normal;font-weight:600;color:var(--ink);}
+
+.empty strong{font-family:var(--font-display);font-weight:800;letter-spacing:-.02em;}
+
 .reset{
   margin:14px 0 0;font:inherit;font-size:13px;padding:8px 16px;
-  border:1px solid var(--line);border-radius:999px;
+  border:1px solid var(--line);border-radius:var(--radius-sm);
   background:var(--card);color:var(--soft);cursor:pointer;
 }
 .reset:hover{border-color:var(--mute);color:var(--ink);}
 
-footer{margin-top:56px;}
+/* Кнопка «наверх» — тот же скруглённый квадрат, что маркер и чипсы */
+.totop{border-radius:var(--radius-sm);}
+
+footer{margin-top:56px;border-top:1px solid var(--line);}
 footer .cite{color:var(--soft);}
+footer .home{
+  display:inline-block;font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);
+  text-decoration:none;padding:6px 12px;border:1px solid var(--line2);
+  border-radius:var(--radius-sm);background:var(--card);
+  transition:color .15s,border-color .15s;
+}
+footer .home:hover{color:var(--ink);border-color:var(--mute);}
 
 @media print{.ref{display:none !important;}}

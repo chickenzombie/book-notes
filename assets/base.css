@@ -9,18 +9,24 @@
    описано здесь через var(), рассчитано на подмену; всё остальное — тоже
    можно, но тогда вы правите каркас, а не тему. */
 
+/* СВЕТЛАЯ И ТЁМНАЯ ТЕМЫ
+   Каждый цвет объявлен один раз через light-dark(): первое значение —
+   светлая тема, второе — тёмная. Что выбрано, решает color-scheme ниже:
+   по умолчанию отдаём выбор системе, а кнопка в шапке жёстко фиксирует
+   одну из тем и запоминает выбор. Тема книги переопределяет эти же
+   переменные — и получает обе темы разом, без второго набора правил. */
 :root{
-  color-scheme:light;
+  color-scheme:light dark;
 
   /* Полотно */
-  --shell:#EDEFF3;    /* фон страницы */
-  --ink:#171A21;      /* основной текст */
-  --soft:#5B616E;     /* пояснения, вторичный текст */
-  --mute:#8A91A0;     /* подписи, метаданные */
-  --card:#FFFFFF;     /* фон карточки */
-  --line:#D5DAE3;     /* заметная линия: разделители, футер */
-  --line2:#E1E5EC;    /* тихая линия: рамки карточек */
-  --sunk:#F6F7FA;     /* фон утопленных блоков (введение к главе) */
+  --shell:light-dark(#EDEFF3,#15171C);  /* фон страницы */
+  --ink:light-dark(#171A21,#E7EAF0);    /* основной текст */
+  --soft:light-dark(#5B616E,#A7AEBC);   /* пояснения, вторичный текст */
+  --mute:light-dark(#8A91A0,#7B8290);   /* подписи, метаданные */
+  --card:light-dark(#FFFFFF,#1D2027);   /* фон карточки */
+  --line:light-dark(#D5DAE3,#353A45);   /* заметная линия: разделители, футер */
+  --line2:light-dark(#E1E5EC,#282C34);  /* тихая линия: рамки карточек */
+  --sunk:light-dark(#F6F7FA,#1A1D23);   /* фон утопленных блоков */
 
   /* Типографика */
   --font-body:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -40,6 +46,42 @@
      кромка введения и точка на чипсе. Значение здесь — запасное. */
   --hue:#8A91A0;
 }
+
+/* Кнопка в шапке ставит data-theme на <html> и тем снимает выбор с системы */
+:root[data-theme="light"]{color-scheme:light;}
+:root[data-theme="dark"]{color-scheme:dark;}
+
+/* Верхняя строка шапки: слева возврат или надглавие, справа переключатель
+   темы. Живёт в каркасе, а не в теме полки, — строка одинакова на всех
+   страницах, а различаться должна только её раскраска. */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin:0 0 16px;
+}
+.topbar>*{margin-bottom:0;}
+
+/* ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ. Без скрипта не работает, поэтому и не показывается:
+   мёртвая кнопка хуже её отсутствия — то же правило, что у панели поиска. */
+:root:not(.js) .theme{display:none;}
+.theme{
+  font:inherit;font-size:15px;line-height:1;cursor:pointer;
+  width:34px;height:34px;padding:0;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:50%;
+  background:var(--card);color:var(--soft);
+  transition:color .15s,border-color .15s;
+}
+.theme:hover{color:var(--ink);border-color:var(--mute);}
+/* Показываем знак той темы, на которую переключит нажатие */
+.theme .to-dark{display:inline;}
+.theme .to-light{display:none;}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .theme .to-dark{display:none;}
+  :root:not([data-theme="light"]) .theme .to-light{display:inline;}
+}
+:root[data-theme="dark"] .theme .to-dark{display:none;}
+:root[data-theme="dark"] .theme .to-light{display:inline;}
+:root[data-theme="light"] .theme .to-dark{display:inline;}
+:root[data-theme="light"] .theme .to-light{display:none;}
 
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;}

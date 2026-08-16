@@ -20,10 +20,10 @@
 <link rel="stylesheet" href="../../assets/fonts.css">
 <link rel="stylesheet" href="../../assets/base.css">
 <link rel="stylesheet" href="theme.css">
-<!-- Ставит класс до первой отрисовки: интерфейс поиска появляется
-     сразу, а не вклинивается в поток после загрузки скрипта. -->
-<script>document.documentElement.classList.add("js")</script>
+<!-- Ставит выбранную тему до первой отрисовки, иначе страница мигнёт светлой -->
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="../../assets/notes.js" defer></script>
+<script src="../../assets/theme.js" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <a class="back" href="../../">← Book Notes</a>
+    <div class="topbar"><a class="back" href="../../">← Book Notes</a> <button class="theme" id="theme" type="button" aria-label="Переключить тему"><span class="to-dark" aria-hidden="true">◐</span><span class="to-light" aria-hidden="true">◑</span></button></div>
     <p class="eyebrow">Гаятри Мохан</p>
     <h1>Фулстек-<br>тестирование</h1>
     <p class="subtitle">Десять навыков проверки качества на всех уровнях приложения</p>
@@ -1187,6 +1187,7 @@
       никакие части книги не могут быть использованы без согласования с правообладателем.</p>
     <p>Пояснения — сжатый пересказ своими словами, а не текст книги. За упражнениями, разбором
       более чем сорока инструментов и примерами кода — <a href="https://www.oreilly.com/library/view/full-stack-testing/9781098108120/">к оригиналу в O’Reilly</a>.</p>
+    <p><a class="home" href="../../">← Все конспекты</a></p>
   </div>
 </footer>
 

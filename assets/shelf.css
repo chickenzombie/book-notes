@@ -11,16 +11,26 @@
 
 :root{
   --font-display:"Unbounded","Golos Text",sans-serif;
+  /* Разводы в шапке. В тёмной теме те же краски, но глубокие: светлая
+     дымка на тёмном полотне выглядела бы налётом пыли. */
+  --glow-1:light-dark(#F7E9F2,#2A1B2B);
+  --glow-2:light-dark(#E2F1F4,#122A2E);
+  --glow-3:light-dark(#EFEAF9,#1E1B33);
+  --tag-bg:light-dark(#F1F3F7,#23272F);
+  --orig:light-dark(#A2A9B8,#6C7382);
 }
 
 .hero{
   padding:40px 0 22px;
   background:
-    radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
-    radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
-    radial-gradient(90% 70% at 50% 100%, #EFEAF9 0%, rgba(239,234,249,0) 70%),
+    radial-gradient(120% 90% at 12% 0%, var(--glow-1) 0%, transparent 60%),
+    radial-gradient(110% 80% at 88% 8%, var(--glow-2) 0%, transparent 62%),
+    radial-gradient(90% 70% at 50% 100%, var(--glow-3) 0%, transparent 70%),
     var(--shell);
 }
+/* Строка с надглавием и переключателем описана в каркасе; здесь ей нужен
+   только просвет побольше — на полке под ней сразу крупный заголовок. */
+.topbar{margin-bottom:18px;}
 .eyebrow{
   font-family:var(--font-mono);font-size:11.5px;letter-spacing:.18em;
   text-transform:uppercase;color:var(--soft);margin:0 0 18px;
@@ -61,16 +71,26 @@ main.wrap{padding:20px 20px 18px;}
   background:linear-gradient(180deg,var(--a1),var(--a2));
 }
 .book:hover{
-  transform:translateY(-3px);border-color:#D2D8E2;
-  box-shadow:0 14px 32px -18px rgba(23,26,33,.36);
+  transform:translateY(-3px);border-color:var(--line);
+  box-shadow:0 14px 32px -18px light-dark(rgba(23,26,33,.36),rgba(0,0,0,.6));
 }
+/* Обложка. Файлы лежат в репозитории рядом с конспектом и собираются
+   скриптом tools/covers.sh — страница не ходит за картинками на чужие
+   домены, как не ходит за шрифтами. Пропорция 2:3 задана и в файле, и
+   здесь: место под картинку занимается до её загрузки, и полка не прыгает. */
+.book .cover{
+  display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;
+  border-radius:10px;background:var(--sunk);
+}
+.book .face{display:flex;flex-direction:column;gap:11px;flex:1;}
+
 .book h2{
   font-family:var(--face,var(--font-display));font-weight:600;
   font-size:19px;line-height:1.25;letter-spacing:-.01em;margin:0;
 }
 .book .meta{font-family:var(--font-mono);font-size:11.5px;color:var(--mute);margin:0;}
 /* Вторая строка — оригинальное издание, приглушённее первой */
-.book .meta.orig{color:#A2A9B8;margin-top:-7px;}
+.book .meta.orig{color:var(--orig);margin-top:-7px;}
 /* Названия у книг разной длины, и оригинальное издание у одной влезает в
    строку, а у другой нет — из-за этого описания соседних карточек начинались
    на разной высоте. Резервируем по две строки под название и под оригинал:
@@ -84,7 +104,7 @@ main.wrap{padding:20px 20px 18px;}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none;}
 .tags li{
   font-size:11.5px;padding:3px 9px;border-radius:999px;
-  background:#F1F3F7;color:var(--soft);border:1px solid var(--line2);
+  background:var(--tag-bg);color:var(--soft);border:1px solid var(--line2);
 }
 .badge{
   margin-top:auto;padding-top:8px;align-self:flex-start;
@@ -92,9 +112,70 @@ main.wrap{padding:20px 20px 18px;}
   color:var(--ink);font-weight:600;
 }
 
+/* ПОЛКА КАК ПОЛКА. Там, где есть курсор, книга стоит обложкой наружу, а
+   описание, теги и счётчик выезжают поверх неё при наведении: так корешки
+   видно все сразу, а подробности — по одной, когда они нужны.
+
+   Только для мыши. На тач-устройствах наведения нет, и там остаётся
+   обычная раскладка — обложка сверху, текст под ней: полка длиннее, зато
+   ничего не спрятано за жестом, которого на телефоне не существует. */
+@media (hover:hover) and (pointer:fine){
+  .book{padding:0;overflow:hidden;}
+  .book .cover{height:100%;border-radius:0;}
+  /* Корешок должен остаться поверх обложки и поверх выезжающего описания */
+  .book::before{z-index:2;}
+  .book .face{
+    position:absolute;inset:0;z-index:1;overflow:auto;
+    padding:22px 22px 24px 26px;
+    /* Плашка непрозрачная. Была с 3% прозрачности, чтобы обложка чуть
+       просвечивала, но эффект получался разный у разных книг: на белой
+       обложке Куликова его не видно вовсе, на тёмных — читается как
+       недокрашенный фон. Ровный фон честнее полупрозрачного. */
+    background:var(--card);
+    opacity:0;transition:opacity .18s ease;
+  }
+  .book:hover .face,
+  .book:focus-visible .face{opacity:1;}
+  /* Выравнивать строки больше незачем: описание лежит поверх обложки,
+     а не под названием, и до соседней карточки ему дела нет. */
+  .book h2,.book .meta.orig{min-height:0;}
+  .book .meta.orig{margin-top:-7px;}
+}
+
+/* ТЕЛЕФОН. Обложка во всю ширину делала карточку выше экрана: до описания
+   надо было листать, а до второй книги — листать дважды. Ставим обложку
+   сбоку — так книжная полка и выглядит в списке: корешок слева, текст
+   справа. Наведения на телефоне нет, прятать описание некуда. */
+@media (max-width:759px){
+  .book{
+    display:grid;grid-template-columns:min(38vw,150px) 1fr;gap:0 16px;
+    align-items:start;padding:16px 16px 18px 20px;
+  }
+  /* Обложка стоит книгой, а не иконкой: заметная доля ширины, скругление
+     и тень от корешка. На 96px она читалась значком рядом с текстом. */
+  .book .cover{
+    grid-row:1 / span 2;border-radius:3px 8px 8px 3px;
+    box-shadow:2px 3px 10px -3px light-dark(rgba(23,26,33,.4),rgba(0,0,0,.65)),
+               inset 3px 0 0 rgba(0,0,0,.12);
+  }
+  .book .face{gap:8px;}
+  .book h2{font-size:16.5px;}
+  .book .desc{font-size:13.5px;}
+  .book .meta{font-size:11px;}
+  .tags li{font-size:11px;padding:2px 8px;}
+  /* Счётчик прижимается к низу текстовой колонки, а не карточки */
+  .badge{margin-top:6px;padding-top:0;}
+}
+/* Совсем узкие экраны: текст в колонке 38% становится в две-три буквы,
+   поэтому обложка уходит наверх во всю ширину, а текст под неё. */
+@media (max-width:420px){
+  .book{grid-template-columns:1fr;gap:14px 0;padding:14px 16px 18px 20px;}
+  .book .cover{grid-row:auto;max-width:190px;}
+}
+
 .soon{
   display:flex;flex-direction:column;justify-content:center;gap:6px;
-  border:1px dashed #C6CDD9;border-radius:16px;padding:26px;
+  border:1px dashed var(--line);border-radius:16px;padding:26px;
   color:var(--mute);background:transparent;
 }
 .soon strong{
@@ -102,5 +183,17 @@ main.wrap{padding:20px 20px 18px;}
   font-size:15px;color:var(--soft);
 }
 .soon span{font-size:13.5px;}
+
+/* Ссылка на репозиторий — в подвале рядом с правами: полка про книги, а
+   не про свой исходный код, поэтому в шапку он не просится. */
+footer .repo{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
+  color:var(--soft);text-decoration:none;
+  padding:7px 14px;border:1px solid var(--line2);border-radius:999px;
+  background:var(--card);transition:color .15s,border-color .15s;
+}
+footer .repo:hover{color:var(--ink);border-color:var(--mute);}
+footer .repo svg{width:15px;height:15px;fill:currentColor;flex:0 0 auto;}
 
 footer{margin-top:40px;}

@@ -47,10 +47,10 @@
 <link rel="stylesheet" href="../../assets/fonts.css">
 <link rel="stylesheet" href="../../assets/base.css">
 <link rel="stylesheet" href="theme.css">
-<!-- Ставит класс до первой отрисовки: интерфейс поиска появляется
-     сразу, а не вклинивается в поток после загрузки скрипта. -->
-<script>document.documentElement.classList.add("js")</script>
+<!-- Ставит выбранную тему до первой отрисовки, иначе страница мигнёт светлой -->
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="../../assets/notes.js" defer></script>
+<script src="../../assets/theme.js" defer></script>
 </head>
 <body>
 
@@ -61,7 +61,7 @@
     <!-- [ЗАПОЛНИТЬ 2/7] Шапка. В h1 — короткое название; длинный «хвост»
          полного названия уносите в .subtitle, иначе он не влезет в экран.
          В .imprint — издательство и год, для переводных книг ещё и оригинал. -->
-    <a class="back" href="../../">← Book Notes</a>
+    <div class="topbar"><a class="back" href="../../">← Book Notes</a> <button class="theme" id="theme" type="button" aria-label="Переключить тему"><span class="to-dark" aria-hidden="true">◐</span><span class="to-light" aria-hidden="true">◑</span></button></div>
     <p class="eyebrow">Автор</p>
     <h1>Название<br>книги</h1>
     <p class="subtitle">Продолжение полного названия, если оно длинное</p>
@@ -166,6 +166,9 @@
       никакие части книги не могут быть использованы без согласования с издательством.</p>
     <p>Пояснения — сжатый пересказ своими словами, а не текст книги. За примерами и разборами —
       <a href="https://example.com/">к книге на сайте издательства</a>.</p>
+    <!-- Возврат на полку. Класс .home — чтобы тема книги могла придать ему
+         свою форму: у соседей это таблетка, скруглённый квадрат и рамка. -->
+    <p><a class="home" href="../../">← Все конспекты</a></p>
   </div>
 </footer>
 

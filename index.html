@@ -22,12 +22,18 @@
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/shelf.css">
+<!-- Ставит выбранную тему до первой отрисовки, иначе страница мигнёт светлой -->
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+<script src="assets/theme.js" defer></script>
 </head>
 <body>
 
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">Конспекты книг</p>
+    <div class="topbar">
+      <p class="eyebrow">Конспекты книг</p>
+      <button class="theme" id="theme" type="button" aria-label="Переключить тему"><span class="to-dark" aria-hidden="true">◐</span><span class="to-light" aria-hidden="true">◑</span></button>
+    </div>
     <h1>Book Notes</h1>
   </div>
 </header>
@@ -42,39 +48,69 @@
        задаётся порядком в разметке: свежее сверху. -->
   <ul class="shelf">
     <li>
+      <a class="book" href="books/testirovanie-po/"
+         style="--a1:#9A6B1E;--a2:#4A7A4E;--face:'Golos Text',system-ui,sans-serif">
+        <img class="cover" src="books/testirovanie-po/cover.jpg" alt="" width="360" height="540" loading="lazy" decoding="async">
+        <div class="face">
+
+          <h2>Тестирование программного обеспечения. Базовый курс</h2>
+          <p class="meta">Святослав Куликов · EPAM Systems, 2025</p>
+          <p class="meta orig">3-е издание · версия 3.2.7</p>
+          <p class="desc">Учебник, а не сборник приёмов: что считать дефектом, как устроены
+            требования и тест-кейсы, по каким тринадцати осям классифицируют тестирование
+            и когда автоматизация начинает вредить.</p>
+          <ul class="tags">
+            <li>Требования</li>
+            <li>Тест-кейсы</li>
+            <li>Дефекты</li>
+            <li>Автоматизация</li>
+          </ul>
+          <span class="badge">164 пункта →</span>
+        </div>
+      </a>
+    </li>
+    <li>
       <a class="book" href="books/fullstack-testing/"
          style="--a1:#2C9AA0;--a2:#3D7BC8;--face:'Unbounded',system-ui,sans-serif">
-        <h2>Фулстек-тестирование</h2>
-        <p class="meta">Гаятри Мохан · Спринт Бук, 2024</p>
-        <p class="meta orig">Full Stack Testing · O’Reilly, 2022</p>
-        <p class="desc">Качество больше не равно отсутствию ошибок. Десять навыков проверки
-          на всех уровнях приложения — от исследовательского тестирования до защищённости,
-          производительности и доступности, с разбором стратегии для каждого.</p>
-        <ul class="tags">
-          <li>Тестирование</li>
-          <li>Автоматизация</li>
-          <li>Защищённость</li>
-          <li>Производительность</li>
-        </ul>
-        <span class="badge">150 пунктов →</span>
+        <img class="cover" src="books/fullstack-testing/cover.jpg" alt="" width="360" height="540" loading="lazy" decoding="async">
+        <div class="face">
+
+          <h2>Фулстек-тестирование</h2>
+          <p class="meta">Гаятри Мохан · Спринт Бук, 2024</p>
+          <p class="meta orig">Full Stack Testing · O’Reilly, 2022</p>
+          <p class="desc">Качество больше не равно отсутствию ошибок. Десять навыков проверки
+            на всех уровнях приложения — от исследовательского тестирования до защищённости,
+            производительности и доступности, с разбором стратегии для каждого.</p>
+          <ul class="tags">
+            <li>Тестирование</li>
+            <li>Автоматизация</li>
+            <li>Защищённость</li>
+            <li>Производительность</li>
+          </ul>
+          <span class="badge">150 пунктов →</span>
+        </div>
       </a>
     </li>
     <li>
       <a class="book" href="books/zhemchuzhiny-razrabotki/"
          style="--a1:#4E74C8;--a2:#9C4F94;--face:'Playfair Display',Georgia,serif">
-        <h2>Жемчужины разработки. Чему мы научились за 50 лет создания ПО</h2>
-        <p class="meta">Карл Вигерс · Питер, 2024</p>
-        <p class="meta orig">Software Development Pearls · Addison-Wesley, 2021</p>
-        <p class="desc">Полвека опыта в шести темах: требования, проектирование, управление
-          проектами, культура, качество и процессы. Ни один урок не про технологию — все
-          про места, где команды спотыкаются снова и снова.</p>
-        <ul class="tags">
-          <li>Требования</li>
-          <li>Управление</li>
-          <li>Качество</li>
-          <li>Процессы</li>
-        </ul>
-        <span class="badge">60 уроков →</span>
+        <img class="cover" src="books/zhemchuzhiny-razrabotki/cover.jpg" alt="" width="360" height="540" loading="lazy" decoding="async">
+        <div class="face">
+
+          <h2>Жемчужины разработки. Чему мы научились за 50 лет создания ПО</h2>
+          <p class="meta">Карл Вигерс · Питер, 2024</p>
+          <p class="meta orig">Software Development Pearls · Addison-Wesley, 2021</p>
+          <p class="desc">Полвека опыта в шести темах: требования, проектирование, управление
+            проектами, культура, качество и процессы. Ни один урок не про технологию — все
+            про места, где команды спотыкаются снова и снова.</p>
+          <ul class="tags">
+            <li>Требования</li>
+            <li>Управление</li>
+            <li>Качество</li>
+            <li>Процессы</li>
+          </ul>
+          <span class="badge">60 уроков →</span>
+        </div>
       </a>
     </li>
     <li class="soon">
@@ -87,6 +123,9 @@
 <footer>
   <div class="wrap">
     <p>Все права на исходные книги принадлежат их авторам и издательствам. Конспекты некоммерческие, пишутся для себя и книги не заменяют: если материал оказался полезен — купите оригинал, ссылки есть на каждой странице.</p>
+    <p><a class="repo" href="https://github.com/chickenzombie/book-notes">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      chickenzombie/book-notes</a></p>
     <p>Разработано <a href="https://github.com/chickenzombie">chickenzombie</a> с помощью
       <a href="https://claude.com/claude-code">Claude Code</a> на модели Claude Opus 5 · 2026</p>
   </div>
