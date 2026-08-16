@@ -7,6 +7,7 @@
 
 | Книга | Автор | Формат |
 |---|---|---|
+| [Тестирование программного обеспечения. Базовый курс](https://chickenzombie.github.io/book-notes/books/testirovanie-po/) | Святослав Куликов | 164 пункта, 10 разделов |
 | [Фулстек-тестирование](https://chickenzombie.github.io/book-notes/books/fullstack-testing/) | Гаятри Мохан | 150 пунктов, 13 разделов |
 | [Жемчужины разработки. Чему мы научились за 50 лет создания ПО](https://chickenzombie.github.io/book-notes/books/zhemchuzhiny-razrabotki/) | Карл Вигерс | 60 уроков, 6 тем |
 
