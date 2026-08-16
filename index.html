@@ -4,113 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Book Notes — визуальные конспекты книг</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --shell:#EDEFF3; --ink:#171A21; --soft:#5B616E; --mute:#8A91A0;
-    --card:#FFFFFF; --line:#D5DAE3; --line2:#E1E5EC;
-  }
-  *{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;background:var(--shell);color:var(--ink);
-    font-family:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1180px;margin:0 auto;padding:0 20px;}
-
-  .hero{
-    /* Плотно: в шапке остались только рубрика и заголовок */
-    padding:40px 0 28px;
-    background:
-      radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
-      radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
-      radial-gradient(90% 70% at 50% 100%, #EFEAF9 0%, rgba(239,234,249,0) 70%),
-      var(--shell);
-  }
-  h1{
-    font-family:"Unbounded","Golos Text",sans-serif;font-weight:800;
-    font-size:clamp(36px,7.6vw,74px);line-height:1;letter-spacing:-.02em;margin:0;
-    background:linear-gradient(100deg,#2A3550 0%,#6E8FE0 18%,#47B7A4 34%,
-      #D9A03C 50%,#B76FB0 66%,#8878D2 82%,#2A3550 100%);
-    background-size:260% 100%;-webkit-background-clip:text;background-clip:text;
-    color:transparent;animation:nacre 22s linear infinite;
-  }
-  @keyframes nacre{0%{background-position:0% 50%;}100%{background-position:260% 50%;}}
-  .eyebrow{
-    font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-    font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--soft);margin:0 0 18px;
-  }
-
-  /* main.wrap, а не main: .wrap задаёт padding:0 20px и по специфичности
-     перебивает голый тег — вертикальные отступы иначе не применяются. */
-  /* Снизу 18px — столько же, сколько от линии заголовка до карточек:
-     полка получает одинаковый просвет сверху и снизу. */
-  main.wrap{padding:44px 20px 18px;}
-  /* Описание проекта и линия, отделяющая его от полки */
-  .about{
-    font-size:clamp(15px,2.1vw,17px);color:var(--soft);max-width:78ch;
-    margin:0 0 26px;padding:0 0 26px;border-bottom:1px solid var(--line);
-  }
-  .shelf{display:grid;gap:16px;grid-template-columns:1fr;}
-  @media (min-width:760px){.shelf{grid-template-columns:1fr 1fr;}}
-  @media (min-width:1080px){.shelf{grid-template-columns:1fr 1fr 1fr;}}
-
-  .book{
-    position:relative;display:flex;flex-direction:column;gap:11px;
-    background:var(--card);border:1px solid var(--line2);border-radius:16px;
-    padding:22px 22px 24px 26px;text-decoration:none;color:inherit;overflow:hidden;
-    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
-  }
-  .book::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
-    background:linear-gradient(180deg,var(--a1),var(--a2));
-  }
-  .book:hover{transform:translateY(-3px);border-color:#D2D8E2;
-    box-shadow:0 14px 32px -18px rgba(23,26,33,.36);}
-  .book h2{
-    font-family:"Unbounded","Golos Text",sans-serif;font-weight:600;
-    font-size:17.5px;line-height:1.25;letter-spacing:-.01em;margin:0;
-  }
-  .meta{
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:11.5px;color:var(--mute);margin:0;
-  }
-  /* Вторая строка — оригинальное издание, приглушённее первой */
-  .meta.orig{color:#A2A9B8;margin-top:-7px;}
-  .book p.desc{margin:0;font-size:14px;color:var(--soft);}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none;}
-  .tags li{
-    font-size:11.5px;padding:3px 9px;border-radius:999px;
-    background:#F1F3F7;color:var(--soft);border:1px solid var(--line2);
-  }
-  .badge{
-    align-self:flex-start;margin-top:2px;
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.06em;color:var(--ink);font-weight:600;
-  }
-
-  .soon{
-    border:1px dashed #C6CDD9;background:transparent;
-    display:flex;flex-direction:column;justify-content:center;gap:6px;
-    padding:26px;border-radius:16px;color:var(--mute);
-  }
-  .soon strong{
-    display:block;font-family:"Unbounded","Golos Text",sans-serif;
-    font-weight:600;font-size:15px;color:var(--soft);
-  }
-  .soon span{font-size:13.5px;}
-
-  footer{border-top:1px solid var(--line);padding:26px 0 46px;font-size:13px;color:var(--mute);}
-  footer p{margin:0 0 8px;max-width:76ch;}
-  footer a{color:var(--soft);text-decoration:underline;text-underline-offset:2px;}
-  footer a:hover{color:var(--ink);}
-
-  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
-</style>
+<meta name="description" content="Одностраничные визуальные конспекты прочитанных книг: структура, ключевые идеи и то, что пригождается в работе. Каждая книга — отдельная страница с поиском и фильтром по разделам.">
+<link rel="canonical" href="https://chickenzombie.github.io/book-notes/">
+<!-- .ico первым, SVG следом: кто понимает SVG, выберет его сам. Растр
+     пересобирается из SVG скриптом tools/icons.sh, руками не править. -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#EDEFF3">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Book Notes">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Book Notes — визуальные конспекты книг">
+<meta property="og:description" content="Одностраничные выжимки прочитанных книг: структура, ключевые идеи и то, что пригождается в работе.">
+<meta property="og:url" content="https://chickenzombie.github.io/book-notes/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/shelf.css">
 </head>
 <body>
 
@@ -123,10 +34,54 @@
 
 <main class="wrap">
   <p class="about">Одностраничные выжимки прочитанных книг: структура, ключевые идеи и то,
-    что пригождается в работе. Каждый конспект — самодостаточная страница с поиском и
-    фильтрами по разделам. Книгу он не заменяет: примеры, доказательства и разборы
-    остаются в оригинале, ссылка на издание есть на каждой странице.</p>
-  <div class="shelf" id="shelf"></div>
+    что пригождается в работе. Каждый конспект — самодостаточная страница со своим
+    оформлением, поиском и фильтрами по разделам. Книгу он не заменяет: примеры,
+    доказательства и разборы остаются в оригинале, ссылка на издание есть на каждой странице.</p>
+
+  <!-- Новая книга — ещё один <li> сюда и папка в books/. Порядок на полке
+       задаётся порядком в разметке: свежее сверху. -->
+  <ul class="shelf">
+    <li>
+      <a class="book" href="books/fullstack-testing/"
+         style="--a1:#2C9AA0;--a2:#3D7BC8;--face:'Unbounded',system-ui,sans-serif">
+        <h2>Фулстек-тестирование</h2>
+        <p class="meta">Гаятри Мохан · Спринт Бук, 2024</p>
+        <p class="meta orig">Full Stack Testing · O’Reilly, 2022</p>
+        <p class="desc">Качество больше не равно отсутствию ошибок. Десять навыков проверки
+          на всех уровнях приложения — от исследовательского тестирования до защищённости,
+          производительности и доступности, с разбором стратегии для каждого.</p>
+        <ul class="tags">
+          <li>Тестирование</li>
+          <li>Автоматизация</li>
+          <li>Защищённость</li>
+          <li>Производительность</li>
+        </ul>
+        <span class="badge">150 пунктов →</span>
+      </a>
+    </li>
+    <li>
+      <a class="book" href="books/zhemchuzhiny-razrabotki/"
+         style="--a1:#4E74C8;--a2:#9C4F94;--face:'Playfair Display',Georgia,serif">
+        <h2>Жемчужины разработки. Чему мы научились за 50 лет создания ПО</h2>
+        <p class="meta">Карл Вигерс · Питер, 2024</p>
+        <p class="meta orig">Software Development Pearls · Addison-Wesley, 2021</p>
+        <p class="desc">Полвека опыта в шести темах: требования, проектирование, управление
+          проектами, культура, качество и процессы. Ни один урок не про технологию — все
+          про места, где команды спотыкаются снова и снова.</p>
+        <ul class="tags">
+          <li>Требования</li>
+          <li>Управление</li>
+          <li>Качество</li>
+          <li>Процессы</li>
+        </ul>
+        <span class="badge">60 уроков →</span>
+      </a>
+    </li>
+    <li class="soon">
+      <strong>Следующая книга</strong>
+      <span>Полка пополняется по мере чтения.</span>
+    </li>
+  </ul>
 </main>
 
 <footer>
@@ -137,48 +92,5 @@
   </div>
 </footer>
 
-<script>
-/* Чтобы добавить книгу — допишите объект в массив и положите страницу в books/<slug>/index.html */
-const BOOKS = [
-  {
-    slug:'zhemchuzhiny-razrabotki',
-    title:'Жемчужины разработки. Чему мы научились за 50 лет создания ПО',
-    author:'Карл Вигерс',
-    year:2024,
-    publisher:'Питер',
-    origTitle:'Software Development Pearls',
-    origPublisher:'Addison-Wesley',
-    origYear:2021,
-    badge:'60 уроков',
-    desc:'Полвека опыта в шести темах: требования, проектирование, управление проектами, культура, качество и процессы. Ни один урок не про технологию — все про места, где команды спотыкаются снова и снова.',
-    tags:['Требования','Управление','Качество','Процессы'],
-    accent:['#6E8FE0','#8878D2']
-  }
-];
-
-const shelf=document.getElementById('shelf');
-
-BOOKS.forEach(b=>{
-  const a=document.createElement('a');
-  a.className='book';
-  a.href=`books/${b.slug}/`;
-  a.style.setProperty('--a1',b.accent[0]);
-  a.style.setProperty('--a2',b.accent[1]);
-  a.innerHTML=`
-    <h2>${b.title}</h2>
-    <p class="meta">${b.author} · ${b.publisher}, ${b.year}</p>
-    ${b.origTitle ? `<p class="meta orig">${b.origTitle} · ${b.origPublisher}, ${b.origYear}</p>` : ''}
-    <p class="desc">${b.desc}</p>
-    <ul class="tags">${b.tags.map(t=>`<li>${t}</li>`).join('')}</ul>
-    <span class="badge">${b.badge} →</span>`;
-  shelf.appendChild(a);
-});
-
-const soon=document.createElement('div');
-soon.className='soon';
-soon.innerHTML=`<strong>Следующая книга</strong><span>Полка пополняется по мере чтения.</span>`;
-shelf.appendChild(soon);
-
-</script>
 </body>
 </html>

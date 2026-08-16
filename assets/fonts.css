@@ -1,0 +1,77 @@
+/* Шрифты лежат в репозитории: страница не ходит на сторонние домены и
+   не зависит от их доступности. Файлы взяты с Google Fonts, нарезка по
+   subset и unicode-range — их же: браузер качает только те куски, которые
+   реально нужны тексту на странице.
+
+   Лицензия на все семейства — SIL Open Font License 1.1; её текст и
+   уведомления об авторских правах лежат в fonts/LICENSE.txt.
+
+   Файл собран tools/fonts.sh — правьте скрипт, а не его. */
+
+/* Golos Text */
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/golos-text-400-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/golos-text-400-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:500;font-display:swap;
+  src:url("fonts/golos-text-500-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:500;font-display:swap;
+  src:url("fonts/golos-text-500-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/golos-text-600-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Golos Text";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/golos-text-600-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+
+/* Unbounded */
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/unbounded-600-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/unbounded-600-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:800;font-display:swap;
+  src:url("fonts/unbounded-800-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Unbounded";font-style:normal;font-weight:800;font-display:swap;
+  src:url("fonts/unbounded-800-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+
+/* JetBrains Mono */
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/jetbrains-mono-400-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
+  src:url("fonts/jetbrains-mono-400-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/jetbrains-mono-600-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/jetbrains-mono-600-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+
+/* Playfair Display */
+@font-face{font-family:"Playfair Display";font-style:italic;font-weight:600;font-display:swap;
+  src:url("fonts/playfair-display-600i-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Playfair Display";font-style:italic;font-weight:600;font-display:swap;
+  src:url("fonts/playfair-display-600i-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"Playfair Display";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/playfair-display-600-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Playfair Display";font-style:normal;font-weight:600;font-display:swap;
+  src:url("fonts/playfair-display-600-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:"Playfair Display";font-style:normal;font-weight:700;font-display:swap;
+  src:url("fonts/playfair-display-700-cyrillic.woff2") format("woff2");
+  unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;}
+@font-face{font-family:"Playfair Display";font-style:normal;font-weight:700;font-display:swap;
+  src:url("fonts/playfair-display-700-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}

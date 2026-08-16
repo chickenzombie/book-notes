@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Фулстек-тестирование">
+  <!-- Пирамида тестирования: широкое основание микротестов, узкая вершина
+       сквозных. Она же читается как стек слоёв приложения. -->
+  <rect width="32" height="32" rx="7" fill="#EFF2F6"/>
+  <rect x="6"    y="20.5" width="20"   height="5" rx="1.6" fill="#2C9AA0"/>
+  <rect x="9.25" y="13.75" width="13.5" height="5" rx="1.6" fill="#3D7BC8"/>
+  <rect x="12.5" y="7"    width="7"    height="5" rx="1.6" fill="#C8811F"/>
+</svg>

@@ -1,0 +1,189 @@
+/* ЛИЦО КНИГИ: «Фулстек-тестирование»
+   -----------------------------------
+   Образ взят из главной мысли книги: качество проверяется на каждом слое
+   приложения — интерфейс, сервисы, данные — и на приложении целиком.
+   Отсюда решения:
+
+     · полотно холодное и приборное, в шапке — миллиметровка: тестирование
+       здесь измеряют, а не обсуждают;
+     · маркер — скруглённый квадрат, как чип статуса в конвейере CI,
+       а не кружок с номером;
+     · у карточки слева кромка цвета главы: карточка читается как слой;
+     · где у автора есть мнемоника (STRIDE, FURPS, RAIL), в маркере стоит
+       её буква, а не порядковый номер, — маркер несёт смысл;
+     · тринадцать глав — тринадцать цветов, от стали через спектр к сирени;
+       по ним же собрана полоса прочитанного.
+
+   Соседняя книга на полке («Жемчужины разработки») — тёплая, жемчужная,
+   с антиквой. Эта нарочно во всём наоборот. */
+
+:root{
+  /* Полотно: холоднее и суше, чем у соседа по полке */
+  --shell:#EFF2F6; --ink:#14181F; --soft:#555C69; --mute:#868D9B;
+  --card:#FFFFFF; --line:#D3D9E2; --line2:#E3E7EE; --sunk:#F5F7FA;
+
+  --font-display:"Unbounded","Golos Text",sans-serif;
+  --font-body:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+
+  --radius:14px;
+  --radius-sm:10px;
+  --accent:#2F7BD6;
+
+  /* Цвет на главу. Порядок неслучаен: основы — сталь, ремесло — синь и
+     бирюза, качество продукта — тёплая часть спектра, будущее — сирень. */
+  --c-1:#5B6B7F;   /* Введение             */
+  --c-2:#3D7BC8;   /* Исследовательское    */
+  --c-3:#2C9AA0;   /* Автоматизация        */
+  --c-4:#2E9E6B;   /* Непрерывное          */
+  --c-5:#7B62CE;   /* Данные               */
+  --c-6:#C2559B;   /* Визуальное           */
+  --c-7:#CE4B4B;   /* Защищённость         */
+  --c-8:#C8811F;   /* Производительность   */
+  --c-9:#4E9B2F;   /* Доступность          */
+  --c-10:#4B62C0;  /* Межфункциональные    */
+  --c-11:#1E8FB5;  /* Мобильные            */
+  --c-12:#6B6B78;  /* За рамками           */
+  --c-13:#9A5BC4;  /* Новые технологии     */
+
+  --ribbon:linear-gradient(90deg,
+    var(--c-1),var(--c-2),var(--c-3),var(--c-4),var(--c-5),var(--c-6),var(--c-7),
+    var(--c-8),var(--c-9),var(--c-10),var(--c-11),var(--c-12),var(--c-13));
+}
+
+/* ШАПКА
+   Миллиметровка на фоне — две сетки, крупная и мелкая. Держу её очень
+   бледной: это фактура приборной бумаги, а не элемент, который читают. */
+.hero{
+  position:relative;padding:56px 0 44px;overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 42%),
+    repeating-linear-gradient(0deg,rgba(91,107,127,.07) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(90deg,rgba(91,107,127,.07) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(0deg,rgba(91,107,127,.035) 0 1px,transparent 1px 14px),
+    repeating-linear-gradient(90deg,rgba(91,107,127,.035) 0 1px,transparent 1px 14px),
+    var(--shell);
+}
+/* Сетка не должна доходить до контента внизу — растворяем её в полотно */
+.hero::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:180px;
+  background:linear-gradient(180deg,rgba(239,242,246,0),var(--shell));
+  pointer-events:none;
+}
+.hero .wrap{position:relative;z-index:1;}
+
+.back{
+  display:inline-block;font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+  color:var(--mute);margin:0 0 16px;
+  border-bottom:1px solid transparent;transition:color .15s,border-color .15s;
+}
+.back:hover{color:var(--ink);border-bottom-color:var(--line);}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--soft);margin:0 0 14px;
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(34px,7.6vw,78px);line-height:1;letter-spacing:-.03em;margin:0;
+}
+.subtitle{
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(14px,2.3vw,20px);line-height:1.28;
+  color:var(--ink);opacity:.62;margin:16px 0 0;max-width:32ch;
+}
+.imprint{font-family:var(--font-mono);font-size:12px;line-height:1.6;color:var(--mute);margin:16px 0 0;}
+.lede{font-size:clamp(16px,2.4vw,20px);max-width:52ch;color:var(--soft);margin:20px 0 0;}
+
+.author{
+  margin:30px 0 0;padding:18px 20px;max-width:72ch;
+  background:var(--sunk);border:1px solid var(--line2);
+  border-left:3px solid var(--c-1);border-radius:var(--radius);
+}
+.author .label{
+  margin:0 0 10px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mute);
+}
+.author p{margin:0 0 10px;font-size:14.5px;color:var(--soft);}
+.author p:last-child{margin-bottom:0;}
+.author b{color:var(--ink);font-weight:600;}
+
+/* Оглавление: тринадцать глав — список длинный, поэтому шрифт мелкий,
+   а строка плотная. Точка слева окрашена цветом главы. */
+.toc{display:flex;flex-wrap:wrap;gap:7px 8px;margin:28px 0 0;padding:0;list-style:none;}
+.toc a{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:11px;text-decoration:none;color:var(--soft);
+  padding:5px 11px;border:1px solid var(--line2);border-radius:999px;background:var(--card);
+  transition:color .15s,border-color .15s;
+}
+.toc a::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--dot,var(--mute));}
+.toc a:hover{color:var(--ink);border-color:var(--mute);}
+
+/* КАРТОЧКА КАК СЛОЙ. Кромка слева цветом главы — та же логика, что у
+   введения к главе: всё, что относится к слою, помечено с одного края. */
+.card{border-left:3px solid var(--hue);}
+.card h3{font-size:15px;line-height:1.36;}
+.card p{font-size:13.5px;}
+.card:hover{box-shadow:0 10px 26px -14px rgba(20,24,31,.32);}
+
+/* МАРКЕР — чип статуса, а не медаль. Квадрат со скруглением, моноширинный.
+   Там, где буква мнемоники (S, T, R, I, D, E у STRIDE и так далее), она
+   встаёт на место номера и читается как часть материала.
+
+   Ширина auto — чтобы вместить «SAST» и «AAA». Раз ширина больше не задана
+   жёстко, как в каркасе, нужен align-self: иначе колоночный флекс карточки
+   растянет маркер по всей её ширине. */
+.marker{
+  width:auto;min-width:30px;height:26px;padding:0 9px;border-radius:7px;
+  align-self:flex-start;
+  font-size:11px;letter-spacing:.04em;background:var(--hue);
+}
+
+/* СПРАВОЧНЫЕ ТАБЛИЦЫ
+   Коды HTTP, уровни WCAG, тридцать межфункциональных требований — материал
+   для сверки, а не для чтения подряд. Поэтому <details>: по умолчанию
+   свёрнуто и не мешает, раскрывается по требованию. Поиск по ним не идёт —
+   скрипт индексирует только карточки. */
+.ref{
+  margin:18px 0 0;border:1px solid var(--line2);border-radius:var(--radius);
+  background:var(--card);
+}
+.ref summary{
+  cursor:pointer;padding:13px 16px;list-style:none;
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--soft);
+  display:flex;align-items:center;gap:10px;
+}
+.ref summary::-webkit-details-marker{display:none;}
+.ref summary::before{
+  content:"+";font-size:14px;line-height:1;color:var(--hue);font-weight:600;
+}
+.ref[open] summary::before{content:"−";}
+.ref summary:hover{color:var(--ink);}
+.ref .scroll{overflow-x:auto;padding:0 16px 16px;}
+.ref table{border-collapse:collapse;width:100%;font-size:13px;min-width:420px;}
+.ref th,.ref td{
+  text-align:left;vertical-align:top;padding:8px 14px 8px 0;
+  border-top:1px solid var(--line2);
+}
+.ref th{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--mute);font-weight:600;white-space:nowrap;
+}
+.ref td:first-child{color:var(--ink);font-weight:500;white-space:nowrap;}
+.ref td{color:var(--soft);}
+/* В длинных списках (тридцать CFR) первый столбец переносить можно */
+.ref.wide td:first-child{white-space:normal;min-width:14ch;}
+
+.reset{
+  margin:14px 0 0;font:inherit;font-size:13px;padding:8px 16px;
+  border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--soft);cursor:pointer;
+}
+.reset:hover{border-color:var(--mute);color:var(--ink);}
+
+footer{margin-top:56px;}
+footer .cite{color:var(--soft);}
+
+@media print{.ref{display:none !important;}}

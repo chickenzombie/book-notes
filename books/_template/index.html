@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--
+  ЗАГОТОВКА ДЛЯ НОВОГО КОНСПЕКТА
+  ------------------------------
+  1. Скопируйте папку целиком: books/_template → books/<slug>
+  2. Пройдите по меткам [ЗАПОЛНИТЬ] в этом файле — их семь.
+  3. Придумайте книге лицо в theme.css. Там же написано, как это делать.
+  4. Положите рядом README.md с выходными данными (образец —
+     в books/zhemchuzhiny-razrabotki/README.md).
+  5. Допишите <li> на полку в корневой index.html.
+
+  Разметка и поведение общие: assets/base.css даёт каркас, assets/notes.js —
+  поиск, фильтр, полосу прочитанного и кнопку «наверх». Скрипт ничего не
+  рисует, пункты лежат здесь готовым HTML: страница читается без JS.
+
+  Заготовка лежит в books/ намеренно — относительные пути к assets/ такие же,
+  как у настоящей книги, и её видно в браузере до всякого копирования.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<!-- [ЗАПОЛНИТЬ 1/7] Заголовок вкладки и описание для поисковиков и мессенджеров.
+     Описание — одно предложение по делу, 120–170 знаков. Слова «конспект книги
+     такой-то» лучше сразу, по нему и ищут. Ниже те же строки повторены в og: —
+     это то, что видно в ссылке, отправленной в чат. -->
+<title>Название книги — краткий подзаголовок</title>
+<meta name="description" content="Конспект книги «Название»: о чём она и что забирает читатель. Одна страница с поиском и фильтром по разделам.">
+<link rel="canonical" href="https://chickenzombie.github.io/book-notes/books/SLUG/">
+<!-- Нарисуйте свой icon.svg и прогоните `bash tools/icons.sh` — он пересоберёт
+     apple-touch-icon.png рядом. Растровый файл руками не правят. -->
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#EDEFF3">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Book Notes">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Название книги — краткий подзаголовок">
+<meta property="og:description" content="О чём книга и что забирает читатель.">
+<meta property="og:url" content="https://chickenzombie.github.io/book-notes/books/SLUG/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="theme.css">
+<!-- Ставит класс до первой отрисовки: интерфейс поиска появляется
+     сразу, а не вклинивается в поток после загрузки скрипта. -->
+<script>document.documentElement.classList.add("js")</script>
+<script src="../../assets/notes.js" defer></script>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <!-- [ЗАПОЛНИТЬ 2/7] Шапка. В h1 — короткое название; длинный «хвост»
+         полного названия уносите в .subtitle, иначе он не влезет в экран.
+         В .imprint — издательство и год, для переводных книг ещё и оригинал. -->
+    <a class="back" href="../../">← Book Notes</a>
+    <p class="eyebrow">Автор</p>
+    <h1>Название<br>книги</h1>
+    <p class="subtitle">Продолжение полного названия, если оно длинное</p>
+    <p class="imprint">Издательство «Название», год · оригинал — Original Title, Publisher, год</p>
+    <p class="lede">Одно-два предложения: о чём книга и чем она отличается от соседей по полке.</p>
+
+    <!-- [ЗАПОЛНИТЬ 3/7] Об авторе: откуда он, чем известен, почему написал
+         именно эту книгу. Два-три абзаца, без пересказа биографии целиком. -->
+    <section class="author">
+      <p class="label">Об авторе</p>
+      <p><b>Имя автора</b> — кто он и откуда пришёл в тему. Факт, который объясняет
+        его взгляд: прошлая профессия, место работы, масштаб практики.</p>
+      <p>Чем известен помимо этой книги: другие работы, проекты, роль в индустрии.</p>
+    </section>
+
+    <!-- [ЗАПОЛНИТЬ 4/7] Оглавление: по строке на раздел, href — id секции.
+         Это обычные якоря, они работают и без скрипта. -->
+    <nav aria-label="Разделы конспекта">
+      <ul class="toc">
+        <li><a href="#one" style="--dot:var(--c-1)">Первый раздел</a></li>
+        <li><a href="#two" style="--dot:var(--c-2)">Второй раздел</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Панель видна только при работающем скрипте (за это отвечает класс js
+     и правило в base.css): без JS фильтровать нечем, а мёртвое поле ввода
+     хуже его отсутствия. Ничего тут менять не нужно, кроме подсказки. -->
+<div class="controls" id="controls">
+  <div class="wrap">
+    <!-- [ЗАПОЛНИТЬ 5/7] Подсказка в поиске: три реальных слова из вашего материала -->
+    <input class="search" id="q" type="search" placeholder="Поиск — «слово», «слово», «слово»…" aria-label="Поиск по конспекту">
+    <div class="chips" id="chips" role="group" aria-label="Фильтр по разделам"></div>
+    <p class="status" id="status" role="status"></p>
+  </div>
+</div>
+
+<main class="wrap">
+  <!-- [ЗАПОЛНИТЬ 6/7] РАЗДЕЛЫ И ПУНКТЫ.
+       У секции: id — ключ фильтра и якорь, data-chip — подпись кнопки,
+       --hue — цвет раздела из theme.css. Разделов может быть сколько угодно.
+       В .range — что и где в книге: «пункты 1–16 · глава 2».
+       Формулировка пункта — как в книге (источник указан в подвале),
+       пояснение — своими словами, одна-две фразы: что это значит на практике. -->
+  <section class="sect" id="one" data-chip="Первый раздел" style="--hue:var(--c-1)">
+    <div class="sect-head">
+      <h2>Первый раздел</h2>
+      <span class="range">пункты 1–2 · глава 1</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Первый абзац: о чём глава и какую задачу автор в ней решает.</p>
+      <p>Второй абзац: главные понятия. Термины автора выделяйте <em>вот так</em>.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">1</span>
+        <h3>Формулировка первого пункта</h3>
+        <p>Пояснение своими словами: что это значит и где встречается в работе.</p>
+      </article>
+      <article class="card">
+        <span class="marker">2</span>
+        <h3>Формулировка второго пункта</h3>
+        <p>Пояснение своими словами.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="two" data-chip="Второй раздел" style="--hue:var(--c-2)">
+    <div class="sect-head">
+      <h2>Второй раздел</h2>
+      <span class="range">пункт 3 · глава 2</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Резюме введения к главе, один-три абзаца.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">3</span>
+        <h3>Формулировка третьего пункта</h3>
+        <p>Пояснение своими словами.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="empty" id="empty" hidden>
+    <strong>Ничего не нашлось</strong>
+    Попробуйте другое слово или вернитесь ко всем пунктам.
+    <button class="reset" id="reset" type="button">Показать все</button>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <!-- [ЗАПОЛНИТЬ 7/7] Выходные данные и права. Обязательны: полное название,
+         издательство, год, ISBN, оригинал и ссылка, где книгу купить. -->
+    <p class="cite">Формулировки приведены по изданию: Автор. «Название книги». — Город: Издательство, год.
+      ISBN 000-0-0000-0000-0. Оригинал: Author. Original Title. Publisher, year.</p>
+    <p>Права на книгу принадлежат автору и издательству. Материал некоммерческий;
+      никакие части книги не могут быть использованы без согласования с издательством.</p>
+    <p>Пояснения — сжатый пересказ своими словами, а не текст книги. За примерами и разборами —
+      <a href="https://example.com/">к книге на сайте издательства</a>.</p>
+  </div>
+</footer>
+
+<button class="totop" id="totop" type="button" aria-label="Наверх" title="Наверх">↑</button>
+
+</body>
+</html>

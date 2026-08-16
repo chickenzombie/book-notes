@@ -1,0 +1,129 @@
+/* ЛИЦО КНИГИ
+   ----------
+   Каркас (assets/base.css) отвечает за то, чтобы страница работала. Этот файл
+   отвечает за то, чтобы она была не такой, как соседняя. Он подключается
+   последним и перебивает всё, что захотите.
+
+   КАК ПРИДУМАТЬ. Не «подобрать красивые цвета», а вытащить образ из самой
+   книги: из названия, из метафоры автора, из того, чем занимается предмет.
+   Дальше образ переводится в решения. Три примера:
+
+     «Жемчужины разработки» — перламутр нарастает слоями вокруг песчинки.
+        Тёмная створка раковины в шапке, тёплое жемчужное полотно, антиква
+        с сильным контрастом штриха, маркер — бледная жемчужина с ободком.
+
+     Книга про чистый код — предмет разговора сам является текстом.
+        Полотно белое до стерильности, всё моноширинным, маркер — квадрат
+        с номером строки, карточка похожа на блок кода с полоской слева,
+        цвета только те, что бывают в подсветке синтаксиса.
+
+     Книга про промышленный дизайн — предмет физический, его хочется трогать.
+        Плотная бумага в фактуре фона, гротеск с широкими прописными,
+        маркер — штампованный кружок, у карточки заметная тень, будто она
+        лежит на столе, палитра жёлто-чёрная, как на технике.
+
+   ЧТО МЕНЯТЬ, по убыванию отдачи:
+     1. Полотно: светлое или тёмное. Разница видна раньше всего остального.
+     2. Шрифт заголовков: антиква / гротеск / моноширинный — это регистр речи.
+     3. Маркер: круг, квадрат, шестиугольник, просто цифра на полях.
+     4. Карточка: рамка, тень, фактура, поведение при наведении.
+     5. Шапка: она ничем не ограничена, пишите ей стили с нуля.
+
+   ШРИФТЫ лежат в репозитории, подключать ничего не нужно. Доступны:
+     Golos Text (400 500 600) · Unbounded (600 800)
+     JetBrains Mono (400 600) · Playfair Display (600 700)
+   Нужен другой — допишите семейство в tools/fonts.sh и запустите его.
+
+   Ниже — работающий минимум. Меняйте смело: сломать каркас отсюда нельзя. */
+
+:root{
+  /* [ЗАПОЛНИТЬ] Полотно. Эти семь значений задают всю страницу. */
+  --shell:#EDEFF3; --ink:#171A21; --soft:#5B616E; --mute:#8A91A0;
+  --card:#FFFFFF; --line:#D5DAE3; --line2:#E1E5EC; --sunk:#F6F7FA;
+
+  /* [ЗАПОЛНИТЬ] Шрифты */
+  --font-display:"Unbounded","Golos Text",sans-serif;
+  --font-body:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+
+  --radius:14px;
+  --accent:#6E8FE0;
+
+  /* [ЗАПОЛНИТЬ] Цвет на раздел: столько, сколько разделов. Ими красятся
+     маркер, кромка введения, точка на кнопке фильтра и оглавление. */
+  --c-1:#6E8FE0; --c-2:#47B7A4; --c-3:#D9A03C;
+  --c-4:#B76FB0; --c-5:#DB6072; --c-6:#8878D2; --c-7:#6C7484;
+
+  /* Полоса прочитанного вверху окна */
+  --ribbon:linear-gradient(90deg,var(--c-1),var(--c-2),var(--c-3),var(--c-4),var(--c-6));
+}
+
+/* ШАПКА. Каркас про неё ничего не знает — это ваш холст. */
+.hero{
+  padding:56px 0 44px;
+  background:
+    radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
+    radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
+    var(--shell);
+}
+.back{
+  display:inline-block;font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+  color:var(--mute);margin:0 0 16px;
+  border-bottom:1px solid transparent;transition:color .15s,border-color .15s;
+}
+.back:hover{color:var(--ink);border-bottom-color:var(--line);}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--soft);margin:0 0 14px;
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(38px,8.4vw,86px);line-height:.98;letter-spacing:-.02em;margin:0;
+}
+.subtitle{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(15px,2.6vw,23px);line-height:1.24;
+  color:var(--ink);opacity:.66;margin:16px 0 0;max-width:30ch;
+}
+.imprint{font-family:var(--font-mono);font-size:12px;line-height:1.6;color:var(--mute);margin:16px 0 0;}
+.lede{font-size:clamp(16px,2.4vw,20px);max-width:48ch;color:var(--soft);margin:20px 0 0;}
+
+.author{
+  margin:30px 0 0;padding:18px 20px;max-width:72ch;
+  background:var(--sunk);border:1px solid var(--line2);
+  border-left:3px solid var(--c-7);border-radius:var(--radius);
+}
+.author .label{
+  margin:0 0 10px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mute);
+}
+.author p{margin:0 0 10px;font-size:14.5px;color:var(--soft);}
+.author p:last-child{margin-bottom:0;}
+.author b{color:var(--ink);font-weight:600;}
+
+/* Оглавление — обычные якоря, работают без скрипта */
+.toc{display:flex;flex-wrap:wrap;gap:8px 10px;margin:28px 0 0;padding:0;list-style:none;}
+.toc a{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:11.5px;text-decoration:none;color:var(--soft);
+  padding:6px 12px;border:1px solid var(--line2);border-radius:999px;
+  transition:color .15s,border-color .15s;
+}
+.toc a::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dot,var(--mute));}
+.toc a:hover{color:var(--ink);border-color:var(--mute);}
+
+/* [ЗАПОЛНИТЬ] Маркер и карточка — характер конспекта. Значения ниже
+   повторяют каркас; перепишите их, иначе страница будет как у соседа. */
+.marker{color:#fff;background:var(--hue);}
+.card h3{font-size:15.5px;line-height:1.34;}
+
+.reset{
+  margin:14px 0 0;font:inherit;font-size:13px;padding:8px 16px;
+  border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--soft);cursor:pointer;
+}
+.reset:hover{border-color:var(--mute);color:var(--ink);}
+
+footer{margin-top:56px;}
+footer .cite{color:var(--soft);}

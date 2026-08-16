@@ -1,0 +1,104 @@
+/* ПОЛКА — тема каталога
+   ---------------------
+   У каталога свой характер, отдельный от книг: светлый, геометричный,
+   Unbounded. Он рама, а не картина. Зато каждая карточка показывает лицо
+   своей книги — корешок её красками и название её шрифтом, — чтобы полка
+   выглядела полкой, а не списком одинаковых плашек.
+
+   Что задаёт карточка книги через inline-стиль:
+     --a1, --a2   краски корешка
+     --face       шрифт названия: тот же, что на странице книги */
+
+:root{
+  --font-display:"Unbounded","Golos Text",sans-serif;
+}
+
+.hero{
+  padding:40px 0 28px;
+  background:
+    radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
+    radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
+    radial-gradient(90% 70% at 50% 100%, #EFEAF9 0%, rgba(239,234,249,0) 70%),
+    var(--shell);
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--soft);margin:0 0 18px;
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(36px,7.6vw,74px);line-height:1;letter-spacing:-.02em;margin:0;
+  background:linear-gradient(100deg,#2A3550 0%,#6E8FE0 18%,#47B7A4 34%,
+    #D9A03C 50%,#B76FB0 66%,#8878D2 82%,#2A3550 100%);
+  background-size:260% 100%;-webkit-background-clip:text;background-clip:text;
+  color:transparent;animation:nacre 22s linear infinite;
+}
+@keyframes nacre{0%{background-position:0% 50%;}100%{background-position:260% 50%;}}
+
+/* Снизу 18px — столько же, сколько от линии описания до карточек:
+   полка получает одинаковый просвет сверху и снизу. */
+main.wrap{padding:44px 20px 18px;}
+.about{
+  font-size:clamp(15px,2.1vw,17px);color:var(--soft);max-width:78ch;
+  margin:0 0 26px;padding:0 0 26px;border-bottom:1px solid var(--line);
+}
+
+.shelf{display:grid;gap:16px;grid-template-columns:1fr;margin:0;padding:0;list-style:none;}
+@media (min-width:760px){.shelf{grid-template-columns:1fr 1fr;}}
+@media (min-width:1080px){.shelf{grid-template-columns:1fr 1fr 1fr;}}
+
+.book{
+  position:relative;display:flex;flex-direction:column;gap:11px;height:100%;
+  background:var(--card);border:1px solid var(--line2);border-radius:16px;
+  padding:22px 22px 24px 26px;text-decoration:none;color:inherit;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+/* Корешок: по нему книга узнаётся на полке раньше, чем прочитано название */
+.book::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:linear-gradient(180deg,var(--a1),var(--a2));
+}
+.book:hover{
+  transform:translateY(-3px);border-color:#D2D8E2;
+  box-shadow:0 14px 32px -18px rgba(23,26,33,.36);
+}
+.book h2{
+  font-family:var(--face,var(--font-display));font-weight:600;
+  font-size:19px;line-height:1.25;letter-spacing:-.01em;margin:0;
+}
+.book .meta{font-family:var(--font-mono);font-size:11.5px;color:var(--mute);margin:0;}
+/* Вторая строка — оригинальное издание, приглушённее первой */
+.book .meta.orig{color:#A2A9B8;margin-top:-7px;}
+/* Названия у книг разной длины, и оригинальное издание у одной влезает в
+   строку, а у другой нет — из-за этого описания соседних карточек начинались
+   на разной высоте. Резервируем по две строки под название и под оригинал:
+   дальше содержимое карточек идёт вровень. В одну колонку соседей нет —
+   там пустое место было бы просто дырой, поэтому только от двух колонок. */
+@media (min-width:760px){
+  .book h2{min-height:2.5em;}         /* две строки при line-height 1.25 */
+  .book .meta.orig{min-height:3.1em;} /* две строки при line-height 1.55 */
+}
+.book .desc{margin:0;font-size:14px;color:var(--soft);}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none;}
+.tags li{
+  font-size:11.5px;padding:3px 9px;border-radius:999px;
+  background:#F1F3F7;color:var(--soft);border:1px solid var(--line2);
+}
+.badge{
+  margin-top:auto;padding-top:8px;align-self:flex-start;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;
+  color:var(--ink);font-weight:600;
+}
+
+.soon{
+  display:flex;flex-direction:column;justify-content:center;gap:6px;
+  border:1px dashed #C6CDD9;border-radius:16px;padding:26px;
+  color:var(--mute);background:transparent;
+}
+.soon strong{
+  display:block;font-family:var(--font-display);font-weight:600;
+  font-size:15px;color:var(--soft);
+}
+.soon span{font-size:13.5px;}
+
+footer{margin-top:40px;}

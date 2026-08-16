@@ -4,200 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Жемчужины разработки — 60 уроков Карла Вигерса</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --shell:#EDEFF3; --ink:#171A21; --soft:#5B616E; --mute:#8A91A0; --card:#FFFFFF;
-    --line:#D5DAE3; --line2:#E1E5EC;
-    --c-req:#6E8FE0; --c-des:#47B7A4; --c-pm:#D9A03C;
-    --c-cult:#B76FB0; --c-qa:#DB6072; --c-proc:#8878D2; --c-gen:#6C7484;
-  }
-  *{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;background:var(--shell);color:var(--ink);
-    font-family:"Golos Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1180px;margin:0 auto;padding:0 20px;}
-
-  /* HERO */
-  .hero{
-    position:relative;overflow:hidden;padding:60px 0 42px;
-    background:
-      radial-gradient(120% 90% at 12% 0%, #F7E9F2 0%, rgba(247,233,242,0) 60%),
-      radial-gradient(110% 80% at 88% 8%, #E2F1F4 0%, rgba(226,241,244,0) 62%),
-      radial-gradient(90% 70% at 50% 100%, #EFEAF9 0%, rgba(239,234,249,0) 70%),
-      var(--shell);
-  }
-  .eyebrow{
-    font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-    font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--soft);margin:0 0 18px;
-  }
-  /* Возврат на полку. Путь относительный: books/<slug>/ → корень */
-  .back{
-    display:inline-block;font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-    font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--mute);text-decoration:none;margin:0 0 14px;
-    border-bottom:1px solid transparent;transition:color .15s,border-color .15s;
-  }
-  .back:hover{color:var(--ink);border-bottom-color:#C3C9D6;}
-  .back:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
-  h1{
-    font-family:"Unbounded","Golos Text",sans-serif;font-weight:800;
-    font-size:clamp(38px,8.4vw,86px);line-height:.98;letter-spacing:-.02em;margin:0;
-    background:linear-gradient(100deg,#2A3550 0%,#6E8FE0 18%,#47B7A4 34%,
-      #D9A03C 50%,#B76FB0 66%,#8878D2 82%,#2A3550 100%);
-    background-size:260% 100%;-webkit-background-clip:text;background-clip:text;
-    color:transparent;animation:nacre 22s linear infinite;
-  }
-  @keyframes nacre{0%{background-position:0% 50%;}100%{background-position:260% 50%;}}
-  .subtitle{
-    font-family:"Unbounded","Golos Text",sans-serif;font-weight:400;
-    font-size:clamp(15px,2.6vw,23px);line-height:1.24;letter-spacing:-.01em;
-    color:var(--ink);opacity:.66;margin:16px 0 0;max-width:30ch;
-  }
-  .imprint{
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
-    color:var(--mute);margin:16px 0 0;line-height:1.6;
-  }
-  .lede{font-size:clamp(16px,2.4vw,20px);max-width:48ch;color:var(--soft);margin:20px 0 0;}
-  .author{
-    margin:30px 0 0;padding:18px 20px;background:#F6F7FA;border:1px solid var(--line2);
-    border-radius:14px;border-left:3px solid var(--c-gen);max-width:72ch;
-  }
-  .author h2{
-    margin:0 0 10px;font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--mute);font-weight:600;
-  }
-  .author p{margin:0 0 10px;font-size:14.5px;color:var(--soft);}
-  .author p:last-child{margin-bottom:0;}
-  .author b{color:var(--ink);font-weight:600;}
-
-  /* CONTROLS */
-  .controls{
-    position:sticky;top:0;z-index:20;background:rgba(237,239,243,.88);
-    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);padding:12px 0;
-  }
-  .controls .wrap{display:flex;flex-direction:column;gap:10px;}
-  .search{
-    width:100%;font:inherit;font-size:15px;padding:11px 14px;
-    border:1px solid #CFD5E0;border-radius:10px;background:#fff;color:var(--ink);
-  }
-  .search::placeholder{color:#9AA1AF;}
-  .search:focus{outline:2px solid #6E8FE0;outline-offset:1px;border-color:transparent;}
-  .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin:0;
-    -ms-overflow-style:none;scrollbar-width:none;}
-  .chips::-webkit-scrollbar{display:none;}
-  /* Мышью горизонтальную полосу не прокрутить, а скроллбар скрыт — последний
-     раздел оказывался недостижим. Там, где есть курсор, переносим на следующую
-     строку; на тач-устройствах полоса листается пальцем и остаётся в одну. */
-  @media (hover:hover) and (pointer:fine){
-    .chips{flex-wrap:wrap;overflow-x:visible;padding-bottom:0;}
-  }
-  .chip{
-    flex:0 0 auto;font:inherit;font-size:13px;padding:7px 13px;border-radius:999px;
-    border:1px solid #CFD5E0;background:#fff;color:var(--soft);cursor:pointer;white-space:nowrap;
-    transition:background .15s,color .15s,border-color .15s;
-  }
-  .chip:hover{border-color:#A8B0C0;}
-  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
-  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
-    margin-right:7px;vertical-align:1px;background:currentColor;}
-
-  /* SECTIONS */
-  /* main.wrap, а не main: .wrap задаёт padding:0 20px и по специфичности
-     перебивает голый тег — вертикальные отступы иначе не применяются. */
-  main.wrap{padding:34px 20px 18px;}
-  .sect{margin:0 0 52px;scroll-margin-top:140px;}
-  /* У последнего раздела поле снизу лишнее — оно складывалось с отступом main
-     и давало огромный провал перед футером. */
-  .sect:last-child{margin-bottom:0;}
-  .sect-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
-    padding:0 0 14px;margin:0 0 18px;border-bottom:1px solid var(--line);}
-  .sect-head h2{font-family:"Unbounded","Golos Text",sans-serif;font-weight:600;
-    font-size:clamp(19px,3vw,25px);letter-spacing:-.01em;margin:0;}
-  .sect-head .range{font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:12px;color:var(--mute);margin-left:auto;white-space:nowrap;}
-
-  .intro{
-    margin:0 0 24px;padding:18px 20px;background:#F6F7FA;
-    border:1px solid var(--line2);border-radius:14px;border-left:3px solid var(--hue,#C3C9D6);
-    max-width:78ch;
-  }
-  .intro h4{
-    margin:0 0 10px;font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--mute);font-weight:600;
-  }
-  .intro p{margin:0 0 10px;font-size:14.5px;color:var(--soft);}
-  .intro p:last-child{margin-bottom:0;}
-  .intro em{color:var(--ink);font-style:normal;font-weight:500;}
-
-  .grid{display:grid;gap:14px;grid-template-columns:1fr;}
-  @media (min-width:700px){.grid{grid-template-columns:1fr 1fr;}}
-  @media (min-width:1080px){.grid{grid-template-columns:1fr 1fr 1fr;}}
-
-  .card{
-    background:var(--card);border:1px solid var(--line2);border-radius:14px;
-    padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;
-    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
-  }
-  .card:hover{transform:translateY(-2px);border-color:#D2D8E2;
-    box-shadow:0 10px 26px -14px rgba(23,26,33,.30);}
-  .pearl{
-    width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;font-weight:600;color:#fff;
-    background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 42%),var(--hue);
-    box-shadow:inset 0 -3px 6px rgba(0,0,0,.16);flex:0 0 auto;
-  }
-  .card h3{font-size:15.5px;font-weight:600;line-height:1.34;letter-spacing:-.005em;margin:0;}
-  .card p{margin:0;font-size:14px;color:var(--soft);}
-
-  .empty{text-align:center;padding:70px 20px;color:var(--soft);}
-  .empty strong{display:block;font-size:19px;color:var(--ink);margin-bottom:6px;
-    font-family:"Unbounded","Golos Text",sans-serif;font-weight:600;}
-  [hidden]{display:none !important;}
-
-  footer{border-top:1px solid var(--line);padding:26px 0 46px;font-size:13px;color:var(--mute);}
-  footer p{margin:0 0 8px;max-width:74ch;}
-  footer a{color:var(--soft);text-decoration:underline;text-underline-offset:2px;}
-  footer a:hover{color:var(--ink);}
-
-  /* Полоса прочитанного. Тянется по верхней кромке окна поверх липкой панели.
-     Ширину гоню через scaleX — трансформации дешевле, чем пересчёт width.
-     Именно 100vw, а не 100%: процент у фиксированного элемента считается от
-     области содержимого и не достаёт до края окна на ширину скроллбара. */
-  .progress{
-    position:fixed;left:0;top:0;height:3px;width:100vw;z-index:40;
-    transform:scaleX(0);transform-origin:0 50%;pointer-events:none;
-    background:linear-gradient(90deg,#6E8FE0 0%,#47B7A4 25%,#D9A03C 50%,#B76FB0 75%,#8878D2 100%);
-  }
-
-  /* Возврат наверх. Появляется, когда прокрутили больше половины страницы */
-  .totop{
-    position:fixed;left:22px;bottom:22px;z-index:30;
-    width:44px;height:44px;border-radius:50%;padding:0;
-    border:1px solid var(--line);background:rgba(255,255,255,.92);
-    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    color:var(--ink);font:inherit;font-size:18px;line-height:1;cursor:pointer;
-    display:grid;place-items:center;
-    box-shadow:0 10px 26px -14px rgba(23,26,33,.45);
-    opacity:0;visibility:hidden;transform:translateY(8px);
-    transition:opacity .2s ease,transform .2s ease,visibility .2s,border-color .15s;
-  }
-  .totop.on{opacity:1;visibility:visible;transform:none;}
-  .totop:hover{border-color:#A8B0C0;}
-  .totop:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
-
-  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
-</style>
+<meta name="description" content="Конспект книги Карла Вигерса: 60 уроков за полвека работы с ПО — требования, проектирование, управление проектами, культура, качество и процессы. Формулировки и пояснения на одной странице с поиском.">
+<link rel="canonical" href="https://chickenzombie.github.io/book-notes/books/zhemchuzhiny-razrabotki/">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0E1720">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Book Notes">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Жемчужины разработки — 60 уроков Карла Вигерса">
+<meta property="og:description" content="Полвека опыта в шести темах: требования, проектирование, управление проектами, культура, качество и процессы. Ни один урок не про технологию.">
+<meta property="og:url" content="https://chickenzombie.github.io/book-notes/books/zhemchuzhiny-razrabotki/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/base.css">
+<link rel="stylesheet" href="theme.css">
+<!-- Ставит класс до первой отрисовки: интерфейс поиска появляется
+     сразу, а не вклинивается в поток после загрузки скрипта. -->
+<script>document.documentElement.classList.add("js")</script>
+<script src="../../assets/notes.js" defer></script>
 </head>
 <body>
 
@@ -211,32 +37,450 @@
     <p class="subtitle">Чему мы научились за 50 лет создания ПО</p>
     <p class="imprint">Издательство «Питер», 2024 · оригинал — Software Development Pearls, Addison-Wesley, 2021</p>
     <p class="lede">60 уроков за полвека работы с ПО. Ни один не про технологию — все про места, где команды спотыкаются снова и снова.</p>
+
     <section class="author">
-      <h2>Об авторе</h2>
+      <p class="label">Об авторе</p>
       <p><b>Карл Вигерс</b> пришёл в разработку не из информатики: у него докторская степень по органической химии, и первые годы он занимался исследованиями в <b>Eastman Kodak</b>. Там же остался, когда перешёл в софт, — в общей сложности 18 лет как разработчик, руководитель и внутренний консультант по процессам. Позже основал <b>Process Impact</b> и занялся консультированием: за карьеру поработал примерно со 150 организациями.</p>
       <p>Известен прежде всего книгами о требованиях: <b>«Разработка требований к программному обеспечению»</b> выдержала несколько изданий и стала одной из стандартных работ по теме. Ему же принадлежит <b>«Peer Reviews in Software»</b> — о рецензировании кода и документов — и несколько книг о консалтинге.</p>
       <p>«Жемчужины разработки» — попытка собрать не приёмы, а выводы: то, что осталось после полувека практики. Отсюда и форма книги: короткие уроки вместо методологии.</p>
     </section>
+
+    <nav aria-label="Разделы конспекта">
+      <ul class="toc">
+        <li><a href="#req" style="--dot:var(--c-req)">Требования</a></li>
+        <li><a href="#des" style="--dot:var(--c-des)">Проектирование</a></li>
+        <li><a href="#pm" style="--dot:var(--c-pm)">Управление проектами</a></li>
+        <li><a href="#cult" style="--dot:var(--c-cult)">Культура и командная работа</a></li>
+        <li><a href="#qa" style="--dot:var(--c-qa)">Качество</a></li>
+        <li><a href="#proc" style="--dot:var(--c-proc)">Совершенствование процессов</a></li>
+        <li><a href="#gen" style="--dot:var(--c-gen)">Что дальше?</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
-<div class="controls">
+<div class="controls" id="controls">
   <div class="wrap">
     <input class="search" id="q" type="search" placeholder="Поиск по урокам — «оценка», «ревью», «риск»…" aria-label="Поиск по урокам">
     <div class="chips" id="chips" role="group" aria-label="Фильтр по разделам"></div>
+    <p class="status" id="status" role="status"></p>
   </div>
 </div>
 
-<main class="wrap" id="main"></main>
+<main class="wrap">
+  <section class="sect" id="req" data-chip="Требования" style="--hue:var(--c-req)">
+    <div class="sect-head">
+      <h2>Требования</h2>
+      <span class="range">уроки 1–16 · глава 2</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Деталей в требованиях почти никогда не хватает с самого начала — они проясняются, когда продукт попадает к людям и те начинают присылать замечания. Вигерс сразу задаёт планку: чем раньше команда доберётся до реальных требований, тем дешевле их воплотить.</p>
+      <p>Само слово покрывает разные вещи, и он их разводит: <em>бизнес-требования</em> — зачем организация вообще взялась за проект; <em>пользовательские</em> — что человек сможет делать; <em>функциональные</em> — что писать разработчику; <em>нефункциональные</em> — атрибуты качества; плюс требования к внешним интерфейсам и к переходу со старой системы на новую. Работа с ними делится на разработку (выявление, анализ, детализация, проверка) и управление.</p>
+      <p>Ключевая мысль введения: смысл всего этого — убедиться, что команда решает настоящую задачу, а не первую озвученную. Клиенты обычно приносят идеи, а не потребности. И ещё: работа с требованиями — это не столько программирование, сколько общение между людьми, поэтому ею занимаются отдельные подготовленные люди; Вигерс называет их бизнес-аналитиками независимо от того, что написано в трудовой.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">1</span>
+        <h3>Если вы неверно определили требования, то неважно, насколько хорошо вы выполните остальную часть работы</h3>
+        <p>Ошибки в требованиях самые частые и самые дорогие: всё остальное строится поверх неверного понимания задачи.</p>
+      </article>
+      <article class="card">
+        <span class="marker">2</span>
+        <h3>Основной результат разработки требований — общее видение и понимание</h3>
+        <p>Ценность не в документе, а в том, что заказчик, аналитик, разработчик и тестировщик представляют себе одно и то же.</p>
+      </article>
+      <article class="card">
+        <span class="marker">3</span>
+        <h3>Интересы всех заинтересованных сторон нигде не пересекаются так явственно, как в требованиях</h3>
+        <p>Пользователи, бизнес, разработка и поддержка хотят разного. Конфликт лучше разрешить здесь, чем потом в коде.</p>
+      </article>
+      <article class="card">
+        <span class="marker">4</span>
+        <h3>В требованиях в первую очередь важны особенности использования, а затем — функциональность</h3>
+        <p>Сценарии «что человек пытается сделать» дают более связную картину, чем список функций, и отсекают лишнее.</p>
+      </article>
+      <article class="card">
+        <span class="marker">5</span>
+        <h3>Разработка требований — итеративный процесс</h3>
+        <p>За один заход требования не собрать: детали уточняются постепенно, часть требований возникает только по ходу.</p>
+      </article>
+      <article class="card">
+        <span class="marker">6</span>
+        <h3>Agile-требования не отличаются от других</h3>
+        <p>Меняются роли, терминология, детальность и момент фиксации. Необходимость понять, что и зачем строим, не меняется.</p>
+      </article>
+      <article class="card">
+        <span class="marker">7</span>
+        <h3>Запись знаний обходится дешевле, чем повторное их обретение</h3>
+        <p>Память команды течёт, люди уходят. Час на запись экономит недели повторного выяснения того же самого.</p>
+      </article>
+      <article class="card">
+        <span class="marker">8</span>
+        <h3>Главное требование к разработке — налаженное и эффективное общение</h3>
+        <p>Разным аудиториям нужно разное. Форму выбирают по задаче: текст, таблица, диаграмма, прототип — что донесёт мысль.</p>
+      </article>
+      <article class="card">
+        <span class="marker">9</span>
+        <h3>Качественность требований каждый определяет по-своему</h3>
+        <p>Хорошее требование — то, по которому разработчик может строить, а тестировщик проверять. Мнение автора не решающее.</p>
+      </article>
+      <article class="card">
+        <span class="marker">10</span>
+        <h3>Требования должны быть достаточно хорошими, чтобы разработка могла продолжаться с приемлемым уровнем риска</h3>
+        <p>Не идеальны, а достаточны. Критерий проработки — какой риск вы готовы нести, двигаясь дальше.</p>
+      </article>
+      <article class="card">
+        <span class="marker">11</span>
+        <h3>Люди не просто так собирают требования</h3>
+        <p>Требования не лежат готовыми у заказчика. Их выявляют, достраивают и придумывают вместе с ним.</p>
+      </article>
+      <article class="card">
+        <span class="marker">12</span>
+        <h3>Выявление требований должно помочь разработчикам услышать голос клиента</h3>
+        <p>Задача аналитика — не пересказать пожелания, а донести реальную потребность до того, кто её решает.</p>
+      </article>
+      <article class="card">
+        <span class="marker">13</span>
+        <h3>Две распространенные практики выявления требований — телепатия и ясновидение. Но они не работают</h3>
+        <p>Ожидания, которые «и так всем понятны», расходятся у каждого. Неявное нужно проговаривать вслух.</p>
+      </article>
+      <article class="card">
+        <span class="marker">14</span>
+        <h3>Большая группа людей не способна организованно покинуть горящую комнату, не говоря уже о том, чтобы сформулировать какое-то требование</h3>
+        <p>Чем больше участников, тем ниже шанс согласия. Нужен модератор, узкий круг решающих и работа не только в группе.</p>
+      </article>
+      <article class="card">
+        <span class="marker">15</span>
+        <h3>Когда принимаете решение о добавлении функций, избегайте расстановки приоритетов по децибелам</h3>
+        <p>Побеждает не самое ценное, а самый настойчивый голос. Нужны критерии: ценность, стоимость, риск.</p>
+      </article>
+      <article class="card">
+        <span class="marker">16</span>
+        <h3>Не задокументировав и не согласовав содержимое проекта, нельзя узнать, увеличивается ли его объем</h3>
+        <p>Расползание объёма видно только на фоне зафиксированных границ. Расплывчатые требования = расплывчатый объём.</p>
+      </article>
+    </div>
+  </section>
 
-<div class="empty" id="empty" hidden>
-  <strong>Ничего не нашлось</strong>
-  Попробуйте другое слово или сбросьте фильтр.
-</div>
+  <section class="sect" id="des" data-chip="Проектирование" style="--hue:var(--c-des)">
+    <div class="sect-head">
+      <h2>Проектирование</h2>
+      <span class="range">уроки 17–22 · глава 3</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Граница между требованиями и проектированием — не чёткая линия, а серая зона. Прототип, собранный ещё на этапе требований, помогает людям додумать, чего они на самом деле хотят: он осязаемее списка формулировок.</p>
+      <p>Переход от требований к коду не прямой и не очевидный. Часть работы систематическая (проектирование БД), часть выкристаллизовывается постепенно, а UX опирается на понимание человека. Вигерс разделяет четыре вида проектирования: <em>архитектурное, техническое, базы данных и пользовательского опыта</em> — и перечисляет принципы, которые снижают сложность: разделение обязанностей, сокрытие информации, слабая связанность, сильная связность, абстракция, чёткие интерфейсы.</p>
+      <p>Личный пример: если бы команда пошла из требований прямо в код, вышла бы система заметно сложнее. Разбор вариантов до реализации показал, что восемь модулей обходятся тремя алгоритмами, а не восемью. Вывод введения короткий — не прыгайте из требований в код.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">17</span>
+        <h3>Проектирование — итеративный процесс</h3>
+        <p>Первый вариант почти никогда не лучший. Прототипы, проверка концепции и макеты нужны, чтобы перебрать варианты дёшево.</p>
+      </article>
+      <article class="card">
+        <span class="marker">18</span>
+        <h3>Чем выше уровень абстракции, тем проще выполнять итерации</h3>
+        <p>Переставить блоки на схеме — минуты, переписать реализацию — недели. Ошибайтесь там, где это дёшево.</p>
+      </article>
+      <article class="card">
+        <span class="marker">19</span>
+        <h3>Разрабатывайте продукты так, чтобы их легко было использовать правильно и трудно — неправильно</h3>
+        <p>Четыре стратегии по убыванию: не дать ошибиться, затруднить ошибку, упростить исправление, позволить ошибке случиться (так не надо).</p>
+      </article>
+      <article class="card">
+        <span class="marker">20</span>
+        <h3>Невозможно оптимизировать все желаемые атрибуты качества</h3>
+        <p>Безопасность против удобства, производительность против переносимости. Приоритеты задают до архитектуры, иначе каждый оптимизирует своё.</p>
+      </article>
+      <article class="card">
+        <span class="marker">21</span>
+        <h3>Проблемы легче предупредить, чем исправить</h3>
+        <p>Про технический долг и рефакторинг: недопроектирование ведёт к переделкам, избыточное проектирование съедает время. Баланс даёт лучший результат.</p>
+      </article>
+      <article class="card">
+        <span class="marker">22</span>
+        <h3>Проблемы многих систем скрываются в интерфейсах</h3>
+        <p>Стыки между модулями, системами и человеком — самое уязвимое место. Отдельно: проверка входных данных.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="pm" data-chip="Управление проектами" style="--hue:var(--c-pm)">
+    <div class="sect-head">
+      <h2>Управление проектами</h2>
+      <span class="range">уроки 23–34 · глава 4</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Вигерс сразу заявляет, что не считает управление проектами отдельной дисциплиной. Это набор занятий, которые могут быть на одном человеке, а могут быть размазаны по команде — как в Scrum между скрам-мастером, владельцем продукта и остальными. «Руководитель проекта» у него означает любого, кто этим занимается, независимо от должности.</p>
+      <p>Введение перечисляет области: люди, требования, ожидания, задачи, обязательства, риски, коммуникации, изменения, ресурсы, зависимости, контракты, поставщики. Отдельно оговорено, что неявные договорённости без бумаги сложнее формальных контрактов — именно потому, что их никто не проговаривал.</p>
+      <p>Важное для тех, кто не менеджер: своей работой вы управляете в любом случае, так что глава применима и к отдельному человеку. Главную обязанность руководителя Вигерс формулирует резко: убирать препятствия с пути команды. Это руководитель работает на команду, а не наоборот.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">23</span>
+        <h3>При планировании работ нужно учитывать разногласия</h3>
+        <p>Переключения между задачами, потерянное состояние потока, совещания. Эффективных часов в дне сильно меньше восьми, и план обязан это отражать.</p>
+      </article>
+      <article class="card">
+        <span class="marker">24</span>
+        <h3>Не давайте оценок наугад</h3>
+        <p>Число, брошенное в коридоре, немедленно превращается в обязательство. За поспешным прогнозом обычно стоит страх неопределённости.</p>
+      </article>
+      <article class="card">
+        <span class="marker">25</span>
+        <h3>Айсберги всегда больше, чем кажутся</h3>
+        <p>Видимая часть задачи — не вся задача. Отсюда необходимость резервов времени, особенно в контрактной работе.</p>
+      </article>
+      <article class="card">
+        <span class="marker">26</span>
+        <h3>Ваши переговорные позиции будут сильнее при наличии обосновывающих данных</h3>
+        <p>Без цифр спор о сроках — это мнение против авторитета, и авторитет выигрывает. С данными разговор становится предметным.</p>
+      </article>
+      <article class="card">
+        <span class="marker">27</span>
+        <h3>Не записывая оценки и не сверяя их с тем, что произошло на самом деле, вы всегда будете строить догадки, а не оценивать</h3>
+        <p>Разница между оценкой и догадкой — наличие обратной связи. Реальные сроки прошлых задач калибруют интуицию.</p>
+      </article>
+      <article class="card">
+        <span class="marker">28</span>
+        <h3>Не меняйте оценку в зависимости от того, что хочет услышать получатель</h3>
+        <p>Оценка не становится меньше от недовольства. Цель и оценка — разные вещи; менять можно объём, ресурсы или качество.</p>
+      </article>
+      <article class="card">
+        <span class="marker">29</span>
+        <h3>Держитесь подальше от критического пути</h3>
+        <p>Если ваша задача блокирует остальных, любая ваша занятость останавливает проект. Особенно это касается руководителей.</p>
+      </article>
+      <article class="card">
+        <span class="marker">30</span>
+        <h3>Задание либо полностью выполнено, либо не выполнено: частичное выполнение не засчитывается</h3>
+        <p>«Готово на 90 %» не говорит ничего о сроке. Отсюда важность общего определения готовности.</p>
+      </article>
+      <article class="card">
+        <span class="marker">31</span>
+        <h3>Команде проекта нужна гибкость в отношении хотя бы одного из пяти измерений: масштаба, плана, бюджета, персонала и качества</h3>
+        <p>Пять измерений нельзя зафиксировать одновременно. Договориться о том, что подвижно, лучше заранее — Вигерс делает это диаграммой гибкости.</p>
+      </article>
+      <article class="card">
+        <span class="marker">32</span>
+        <h3>Если вы не контролируете риски своего проекта, то они будут контролировать вас</h3>
+        <p>Неучтённый риск не исчезает, а реализуется в худший момент. Управление рисками — поиск ответа до вопроса «и что теперь?».</p>
+      </article>
+      <article class="card">
+        <span class="marker">33</span>
+        <h3>Клиент не всегда прав</h3>
+        <p>Часть работы — объяснить, почему требование вредно или невыполнимо. Причём так, чтобы не обесценить точку зрения клиента.</p>
+      </article>
+      <article class="card">
+        <span class="marker">34</span>
+        <h3>Мы слишком часто принимаем желаемое за действительное</h3>
+        <p>Делают вид, что срок реален, требования полны, а план выполним. Все это знают и продолжают кивать.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="cult" data-chip="Культура и командная работа" style="--hue:var(--c-cult)">
+    <div class="sect-head">
+      <h2>Культура и командная работа</h2>
+      <span class="range">уроки 35–42 · глава 5</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Культура — это негласное «как мы тут работаем»: общие ценности плюс технические практики. Она складывается сама собой, если её не выстраивать осознанно, и случайный набор привычек редко превращается в здоровую среду.</p>
+      <p>Центральное понятие введения — <em>конгруэнтность</em>: совпадает ли заявленное с реальным поведением, когда поджимает срок. Проверяется просто — по тому, что в организации на самом деле поощряют. Вигерс приводит свой случай: команда, сэкономившая на проектировании и потом героически чинившая падающую систему, получила похвалу руководства; команда, сделавшая надёжно, но позже, — ничего.</p>
+      <p>Отсюда два практических совета: фиксировать культуру явно (командный контракт, который команда пишет себе сама, а не получает сверху и не копирует из интернета) и оценивать культурное совпадение при найме. У него есть история кандидатки с сильным техническим бэкграундом, которой он отказал — она сразу обозначила, что не будет соблюдать принятую в команде практику, и не объяснила почему.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">35</span>
+        <h3>Передача знаний не ведет к проигрышу</h3>
+        <p>Поделившись, вы не теряете. Удержание знаний ради незаменимости вредит команде и в итоге вам самим.</p>
+      </article>
+      <article class="card">
+        <span class="marker">36</span>
+        <h3>Как бы сильно на вас ни давили, не берите на себя обязательства, которые не сможете выполнить</h3>
+        <p>Согласие ради спокойствия сегодня оборачивается сорванным сроком и потерянным доверием завтра.</p>
+      </article>
+      <article class="card">
+        <span class="marker">37</span>
+        <h3>Не ждите, что без обучения и освоения передовых практик продуктивность повысится как по волшебству</h3>
+        <p>Требовать «быстрее» без изменения того, как работают, бессмысленно. Инструменты без обучения тоже не помогают.</p>
+      </article>
+      <article class="card">
+        <span class="marker">38</span>
+        <h3>Люди много говорят о своих правах, но права подразумевают ответственность</h3>
+        <p>У каждой стороны — клиента, разработчика, спонсора, участника автономной команды — есть и то и другое. Односторонний список прав не работает.</p>
+      </article>
+      <article class="card">
+        <span class="marker">39</span>
+        <h3>Даже небольшие физические расстояния препятствуют общению и совместной работе</h3>
+        <p>Достаточно другого этажа, чтобы люди перестали разговаривать. Распределённые команды — крайняя форма этой проблемы.</p>
+      </article>
+      <article class="card">
+        <span class="marker">40</span>
+        <h3>Неформальные подходы, используемые небольшими сплоченными командами, плохо масштабируются</h3>
+        <p>То, что работает впятером, разваливается на пятидесяти: нужны процессы, инструменты и специализация.</p>
+      </article>
+      <article class="card">
+        <span class="marker">41</span>
+        <h3>Не стоит недооценивать сложность изменения культуры организации по мере перехода к новым методам работы</h3>
+        <p>Практики внедряются быстро, ценности и поведение — нет. Настоящий переход — это интернализация, а не соблюдение регламента.</p>
+      </article>
+      <article class="card">
+        <span class="marker">42</span>
+        <h3>Никакие инженерные или управленческие приемы не дадут эффекта, если вы имеете дело с неразумными людьми</h3>
+        <p>Ни одна практика не чинит человека, который не хочет договариваться. Это проблема другого класса.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="qa" data-chip="Качество" style="--hue:var(--c-qa)">
+    <div class="sect-head">
+      <h2>Качество</h2>
+      <span class="range">уроки 43–50 · глава 6</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Вигерс начинает с того, что единого определения качества нет, и приводит с полдюжины чужих — от «соответствия требованиям» Кросби до «ценности для некоторых людей» Вайнберга. Вывод: качество многомерно и ситуативно, поэтому каждая команда решает сама, что оно означает для её продукта, и договаривается об этом со всеми участниками.</p>
+      <p>Самое сильное наблюдение введения — про классический треугольник ограничений: качества в нём нет. И поэтому оно молча становится зависимой переменной, тем, что осталось после сроков и объёма. Вигерс предлагает вынести его в явные параметры проекта наравне с масштабом, планом, бюджетом и персоналом (это его пятимерная модель из урока 31).</p>
+      <p>Дальше — что внутреннее качество (разработчик, поддержка) и внешнее (пользователь) это разные вещи, и что качество нельзя доставить отдельной итерацией потом: часть атрибутов имеет архитектурные последствия и закладывается с самого начала. Плюс отрезвляющая цифра: потери США от низкого качества ПО за 2018 год оценены в 2,26 трлн долларов без учёта техдолга.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">43</span>
+        <h3>Решая вопрос о качестве программного обеспечения, вы можете выбирать: платить немало сейчас или позже, но еще больше</h3>
+        <p>Стоимость исправления растёт с каждым этапом, а поздние дефекты ещё и труднее найти. Дешевле всего — не внести.</p>
+      </article>
+      <article class="card">
+        <span class="marker">44</span>
+        <h3>Высокое качество естественным образом ведет к повышению продуктивности</h3>
+        <p>История двух команд: одна экономила на проектировании и тушила пожары, другая сделала надёжно. Переделки съедают больше, чем качество стоит.</p>
+      </article>
+      <article class="card">
+        <span class="marker">45</span>
+        <h3>У организаций никогда нет времени, чтобы правильно создать программное обеспечение, но они находят ресурсы, чтобы исправить его позже</h3>
+        <p>На «сделать нормально сразу» времени нет, на исправление в проде — есть, и в любом объёме.</p>
+      </article>
+      <article class="card">
+        <span class="marker">46</span>
+        <h3>Остерегайтесь малозаметных разрывов между плохим и хорошим</h3>
+        <p>Разница часто в одном лишнем вопросе, проверке или прогоне тестов. Этот зазор создают спешка и невнимание к деталям.</p>
+      </article>
+      <article class="card">
+        <span class="marker">47</span>
+        <h3>Никогда не поддавайтесь уговорам руководителя или клиента сделать работу наспех</h3>
+        <p>Давление сроков — не индульгенция. Здесь же про негласную профессиональную этику и обход процессов.</p>
+      </article>
+      <article class="card">
+        <span class="marker">48</span>
+        <h3>Стремитесь к тому, чтобы дефект нашли коллеги, а не покупатели</h3>
+        <p>Ревью ловит то, что тесты не увидят, и стоит на порядок дешевле. Побочный эффект — рост общей культуры в команде.</p>
+      </article>
+      <article class="card">
+        <span class="marker">49</span>
+        <h3>Разработчики программного обеспечения любят инструменты, но дурак с инструментами — это вооруженный дурак</h3>
+        <p>Инструмент — не процесс. Плохой процесс он лишь ускоряет и масштабирует.</p>
+      </article>
+      <article class="card">
+        <span class="marker">50</span>
+        <h3>Сегодняшний проект, требующий немедленной реализации, завтра может превратиться в кошмар для службы сопровождения</h3>
+        <p>Технический долг бывает осознанным решением, но остаётся долгом. Сэкономленные недели возвращаются годами сопровождения.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="proc" data-chip="Совершенствование процессов" style="--hue:var(--c-proc)">
+    <div class="sect-head">
+      <h2>Совершенствование процессов</h2>
+      <span class="range">уроки 51–59 · глава 7</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>SPI — это не сбор регламентов и не внедрение самой модной модели зрелости, а средство получить нужный бизнес-результат: быстрее выпускать, меньше переделывать, дешевле поддерживать. Любая ретроспектива, после которой что-то реально изменилось в работе, — уже совершенствование процесса.</p>
+      <p>Вигерс отдельно защищает само слово «процесс», у которого дурная репутация. Процесс и творчество совместимы: у него есть собственный процесс написания книг, и он не ограничивает слова, а экономит внимание. Организации добиваются успеха благодаря процессам, а не вопреки им — если процессы подходящие.</p>
+      <p>Практическое предупреждение: у организации есть примерно две неудачные попытки изменений, после чего люди перестают воспринимать инициативы всерьёз и просто пережидают их. И отдача приходит не сразу — бросить на полпути, после вложений в оценку и обучение, но до окупаемости, значит потерять всё вложенное.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">51</span>
+        <h3>Остерегайтесь «менеджмента по Businessweek»</h3>
+        <p>Сначала проблема, потом решение, а не наоборот. Мода на методологию — не диагноз, а поиск первопричины — уже лечение.</p>
+      </article>
+      <article class="card">
+        <span class="marker">52</span>
+        <h3>Не спрашивайте: «Что это даст мне?» Спрашивайте: «Что это даст нам?»</h3>
+        <p>Изменения оценивают по выгоде для команды. Личная выгода — плохой критерий и ещё худший аргумент.</p>
+      </article>
+      <article class="card">
+        <span class="marker">53</span>
+        <h3>Боль — лучшая мотивация для изменения методов работы</h3>
+        <p>Люди меняют привычки, когда текущий способ реально мешает. Абстрактная польза не двигает никого; сложнее всего с болью, которую перестали замечать.</p>
+      </article>
+      <article class="card">
+        <span class="marker">54</span>
+        <h3>Внедряя новые методы работы, делайте это мягко, но непрерывно</h3>
+        <p>Не рывком и не приказом, а постоянным несильным нажимом в одну сторону. Отдельно — про управление собственным начальством.</p>
+      </article>
+      <article class="card">
+        <span class="marker">55</span>
+        <h3>У вас нет времени, чтобы совершить все ошибки, сделанные до вас</h3>
+        <p>Чужой опыт доступен бесплатно: книги, доклады, коллеги. Кривая обучения — то, что можно сделать положе.</p>
+      </article>
+      <article class="card">
+        <span class="marker">56</span>
+        <h3>Здравый смысл и опыт иногда важнее определенного процесса</h3>
+        <p>Процесс — средство, а не цель. Там, где буква регламента вредит результату, побеждает суждение. Но и категоричность здесь вредна.</p>
+      </article>
+      <article class="card">
+        <span class="marker">57</span>
+        <h3>Адаптируйте готовые шаблоны документов</h3>
+        <p>Шаблон подгоняют под проект, а не проект растягивают под шаблон. Пустые разделы «для галочки» обесценивают документ.</p>
+      </article>
+      <article class="card">
+        <span class="marker">58</span>
+        <h3>Если не тратить время на учебу и совершенствование, то не стоит ждать, что следующий проект будет реализован лучше предыдущего</h3>
+        <p>Ретроспектива имеет смысл, только если после неё что-то происходит. Главное — не структура встречи, а то, что за ней следует.</p>
+      </article>
+      <article class="card">
+        <span class="marker">59</span>
+        <h3>Самая удручающая закономерность в индустрии программного обеспечения — повторение одних и тех же неэффективных действий снова и снова</h3>
+        <p>Если практика не даёт результата третий проект подряд, проблема не в исполнении, а в самой практике.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" id="gen" data-chip="Что дальше?" style="--hue:var(--c-gen)">
+    <div class="sect-head">
+      <h2>Что дальше?</h2>
+      <span class="range">урок 60 · глава 8</span>
+    </div>
+    <div class="intro">
+      <p class="label">О чём глава</p>
+      <p>Финальная глава не добавляет техники. Она про порядок действий: приоритизация изменений, проверка реальности, планирование и — отдельным разделом — ваши собственные уроки, те, что вы вынесли из своего опыта.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <span class="marker">60</span>
+        <h3>Невозможно изменить все сразу</h3>
+        <p>Выберите немного изменений с наибольшей отдачей, сверьтесь с реальностью и доведите их до привычки. Потом беритесь за следующие.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="empty" id="empty" hidden>
+    <strong>Ничего не нашлось</strong>
+    Попробуйте другое слово или вернитесь ко всем урокам.
+    <button class="reset" id="reset" type="button">Показать все 60</button>
+  </div>
+</main>
 
 <footer>
   <div class="wrap">
-    <p>Формулировки уроков приведены по русскому изданию: Карл Вигерс. <a href="https://www.piter.com/product/zhemchuzhiny-razrabotki-chemu-my-nauchilis-za-50-let-sozdaniya-po">«Жемчужины разработки. Чему мы научились за 50 лет создания ПО»</a>. — СПб.: Питер, 2024. ISBN 978-5-4461-1986-8. Оригинал: Karl Wiegers. Software Development Pearls. Addison-Wesley, 2021.</p>
+    <p class="cite">Формулировки уроков приведены по русскому изданию: Карл Вигерс. <a href="https://www.piter.com/product/zhemchuzhiny-razrabotki-chemu-my-nauchilis-za-50-let-sozdaniya-po">«Жемчужины разработки. Чему мы научились за 50 лет создания ПО»</a>. — СПб.: Питер, 2024. ISBN 978-5-4461-1986-8. Оригинал: Karl Wiegers. Software Development Pearls. Addison-Wesley, 2021.</p>
     <p>Публикуется с разрешения издательства «Питер» для некоммерческого использования. Никакие части книги не могут быть использованы без согласования с издательством. Права на перевод — ООО «Прогресс книга».</p>
     <p>Пояснения к урокам и резюме введений — сжатый пересказ, а не текст книги. Примеры, кейсы и разделы «первые шаги» / «следующие шаги» остались в оригинале.</p>
   </div>
@@ -244,190 +488,22 @@
 
 <button class="totop" id="totop" type="button" aria-label="Наверх" title="Наверх">↑</button>
 
-<script>
-const CATS = [
-  {id:'req', name:'Требования', hue:'var(--c-req)', range:'уроки 1–16 · глава 2',
-   intro:[
-     'Деталей в требованиях почти никогда не хватает с самого начала — они проясняются, когда продукт попадает к людям и те начинают присылать замечания. Вигерс сразу задаёт планку: чем раньше команда доберётся до реальных требований, тем дешевле их воплотить.',
-     'Само слово покрывает разные вещи, и он их разводит: <em>бизнес-требования</em> — зачем организация вообще взялась за проект; <em>пользовательские</em> — что человек сможет делать; <em>функциональные</em> — что писать разработчику; <em>нефункциональные</em> — атрибуты качества; плюс требования к внешним интерфейсам и к переходу со старой системы на новую. Работа с ними делится на разработку (выявление, анализ, детализация, проверка) и управление.',
-     'Ключевая мысль введения: смысл всего этого — убедиться, что команда решает настоящую задачу, а не первую озвученную. Клиенты обычно приносят идеи, а не потребности. И ещё: работа с требованиями — это не столько программирование, сколько общение между людьми, поэтому ею занимаются отдельные подготовленные люди; Вигерс называет их бизнес-аналитиками независимо от того, что написано в трудовой.'
-   ]},
-  {id:'des', name:'Проектирование', hue:'var(--c-des)', range:'уроки 17–22 · глава 3',
-   intro:[
-     'Граница между требованиями и проектированием — не чёткая линия, а серая зона. Прототип, собранный ещё на этапе требований, помогает людям додумать, чего они на самом деле хотят: он осязаемее списка формулировок.',
-     'Переход от требований к коду не прямой и не очевидный. Часть работы систематическая (проектирование БД), часть выкристаллизовывается постепенно, а UX опирается на понимание человека. Вигерс разделяет четыре вида проектирования: <em>архитектурное, техническое, базы данных и пользовательского опыта</em> — и перечисляет принципы, которые снижают сложность: разделение обязанностей, сокрытие информации, слабая связанность, сильная связность, абстракция, чёткие интерфейсы.',
-     'Личный пример: если бы команда пошла из требований прямо в код, вышла бы система заметно сложнее. Разбор вариантов до реализации показал, что восемь модулей обходятся тремя алгоритмами, а не восемью. Вывод введения короткий — не прыгайте из требований в код.'
-   ]},
-  {id:'pm', name:'Управление проектами', hue:'var(--c-pm)', range:'уроки 23–34 · глава 4',
-   intro:[
-     'Вигерс сразу заявляет, что не считает управление проектами отдельной дисциплиной. Это набор занятий, которые могут быть на одном человеке, а могут быть размазаны по команде — как в Scrum между скрам-мастером, владельцем продукта и остальными. «Руководитель проекта» у него означает любого, кто этим занимается, независимо от должности.',
-     'Введение перечисляет области: люди, требования, ожидания, задачи, обязательства, риски, коммуникации, изменения, ресурсы, зависимости, контракты, поставщики. Отдельно оговорено, что неявные договорённости без бумаги сложнее формальных контрактов — именно потому, что их никто не проговаривал.',
-     'Важное для тех, кто не менеджер: своей работой вы управляете в любом случае, так что глава применима и к отдельному человеку. Главную обязанность руководителя Вигерс формулирует резко: убирать препятствия с пути команды. Это руководитель работает на команду, а не наоборот.'
-   ]},
-  {id:'cult', name:'Культура и командная работа', hue:'var(--c-cult)', range:'уроки 35–42 · глава 5',
-   intro:[
-     'Культура — это негласное «как мы тут работаем»: общие ценности плюс технические практики. Она складывается сама собой, если её не выстраивать осознанно, и случайный набор привычек редко превращается в здоровую среду.',
-     'Центральное понятие введения — <em>конгруэнтность</em>: совпадает ли заявленное с реальным поведением, когда поджимает срок. Проверяется просто — по тому, что в организации на самом деле поощряют. Вигерс приводит свой случай: команда, сэкономившая на проектировании и потом героически чинившая падающую систему, получила похвалу руководства; команда, сделавшая надёжно, но позже, — ничего.',
-     'Отсюда два практических совета: фиксировать культуру явно (командный контракт, который команда пишет себе сама, а не получает сверху и не копирует из интернета) и оценивать культурное совпадение при найме. У него есть история кандидатки с сильным техническим бэкграундом, которой он отказал — она сразу обозначила, что не будет соблюдать принятую в команде практику, и не объяснила почему.'
-   ]},
-  {id:'qa', name:'Качество', hue:'var(--c-qa)', range:'уроки 43–50 · глава 6',
-   intro:[
-     'Вигерс начинает с того, что единого определения качества нет, и приводит с полдюжины чужих — от «соответствия требованиям» Кросби до «ценности для некоторых людей» Вайнберга. Вывод: качество многомерно и ситуативно, поэтому каждая команда решает сама, что оно означает для её продукта, и договаривается об этом со всеми участниками.',
-     'Самое сильное наблюдение введения — про классический треугольник ограничений: качества в нём нет. И поэтому оно молча становится зависимой переменной, тем, что осталось после сроков и объёма. Вигерс предлагает вынести его в явные параметры проекта наравне с масштабом, планом, бюджетом и персоналом (это его пятимерная модель из урока 31).',
-     'Дальше — что внутреннее качество (разработчик, поддержка) и внешнее (пользователь) это разные вещи, и что качество нельзя доставить отдельной итерацией потом: часть атрибутов имеет архитектурные последствия и закладывается с самого начала. Плюс отрезвляющая цифра: потери США от низкого качества ПО за 2018 год оценены в 2,26 трлн долларов без учёта техдолга.'
-   ]},
-  {id:'proc', name:'Совершенствование процессов', hue:'var(--c-proc)', range:'уроки 51–59 · глава 7',
-   intro:[
-     'SPI — это не сбор регламентов и не внедрение самой модной модели зрелости, а средство получить нужный бизнес-результат: быстрее выпускать, меньше переделывать, дешевле поддерживать. Любая ретроспектива, после которой что-то реально изменилось в работе, — уже совершенствование процесса.',
-     'Вигерс отдельно защищает само слово «процесс», у которого дурная репутация. Процесс и творчество совместимы: у него есть собственный процесс написания книг, и он не ограничивает слова, а экономит внимание. Организации добиваются успеха благодаря процессам, а не вопреки им — если процессы подходящие.',
-     'Практическое предупреждение: у организации есть примерно две неудачные попытки изменений, после чего люди перестают воспринимать инициативы всерьёз и просто пережидают их. И отдача приходит не сразу — бросить на полпути, после вложений в оценку и обучение, но до окупаемости, значит потерять всё вложенное.'
-   ]},
-  {id:'gen', name:'Что дальше?', hue:'var(--c-gen)', range:'урок 60 · глава 8',
-   intro:[
-     'Финальная глава не добавляет техники. Она про порядок действий: приоритизация изменений, проверка реальности, планирование и — отдельным разделом — ваши собственные уроки, те, что вы вынесли из своего опыта.'
-   ]}
-];
-
-const L = [
-['req',1,'Если вы неверно определили требования, то неважно, насколько хорошо вы выполните остальную часть работы','Ошибки в требованиях самые частые и самые дорогие: всё остальное строится поверх неверного понимания задачи.'],
-['req',2,'Основной результат разработки требований — общее видение и понимание','Ценность не в документе, а в том, что заказчик, аналитик, разработчик и тестировщик представляют себе одно и то же.'],
-['req',3,'Интересы всех заинтересованных сторон нигде не пересекаются так явственно, как в требованиях','Пользователи, бизнес, разработка и поддержка хотят разного. Конфликт лучше разрешить здесь, чем потом в коде.'],
-['req',4,'В требованиях в первую очередь важны особенности использования, а затем — функциональность','Сценарии «что человек пытается сделать» дают более связную картину, чем список функций, и отсекают лишнее.'],
-['req',5,'Разработка требований — итеративный процесс','За один заход требования не собрать: детали уточняются постепенно, часть требований возникает только по ходу.'],
-['req',6,'Agile-требования не отличаются от других','Меняются роли, терминология, детальность и момент фиксации. Необходимость понять, что и зачем строим, не меняется.'],
-['req',7,'Запись знаний обходится дешевле, чем повторное их обретение','Память команды течёт, люди уходят. Час на запись экономит недели повторного выяснения того же самого.'],
-['req',8,'Главное требование к разработке — налаженное и эффективное общение','Разным аудиториям нужно разное. Форму выбирают по задаче: текст, таблица, диаграмма, прототип — что донесёт мысль.'],
-['req',9,'Качественность требований каждый определяет по-своему','Хорошее требование — то, по которому разработчик может строить, а тестировщик проверять. Мнение автора не решающее.'],
-['req',10,'Требования должны быть достаточно хорошими, чтобы разработка могла продолжаться с приемлемым уровнем риска','Не идеальны, а достаточны. Критерий проработки — какой риск вы готовы нести, двигаясь дальше.'],
-['req',11,'Люди не просто так собирают требования','Требования не лежат готовыми у заказчика. Их выявляют, достраивают и придумывают вместе с ним.'],
-['req',12,'Выявление требований должно помочь разработчикам услышать голос клиента','Задача аналитика — не пересказать пожелания, а донести реальную потребность до того, кто её решает.'],
-['req',13,'Две распространенные практики выявления требований — телепатия и ясновидение. Но они не работают','Ожидания, которые «и так всем понятны», расходятся у каждого. Неявное нужно проговаривать вслух.'],
-['req',14,'Большая группа людей не способна организованно покинуть горящую комнату, не говоря уже о том, чтобы сформулировать какое-то требование','Чем больше участников, тем ниже шанс согласия. Нужен модератор, узкий круг решающих и работа не только в группе.'],
-['req',15,'Когда принимаете решение о добавлении функций, избегайте расстановки приоритетов по децибелам','Побеждает не самое ценное, а самый настойчивый голос. Нужны критерии: ценность, стоимость, риск.'],
-['req',16,'Не задокументировав и не согласовав содержимое проекта, нельзя узнать, увеличивается ли его объем','Расползание объёма видно только на фоне зафиксированных границ. Расплывчатые требования = расплывчатый объём.'],
-
-['des',17,'Проектирование — итеративный процесс','Первый вариант почти никогда не лучший. Прототипы, проверка концепции и макеты нужны, чтобы перебрать варианты дёшево.'],
-['des',18,'Чем выше уровень абстракции, тем проще выполнять итерации','Переставить блоки на схеме — минуты, переписать реализацию — недели. Ошибайтесь там, где это дёшево.'],
-['des',19,'Разрабатывайте продукты так, чтобы их легко было использовать правильно и трудно — неправильно','Четыре стратегии по убыванию: не дать ошибиться, затруднить ошибку, упростить исправление, позволить ошибке случиться (так не надо).'],
-['des',20,'Невозможно оптимизировать все желаемые атрибуты качества','Безопасность против удобства, производительность против переносимости. Приоритеты задают до архитектуры, иначе каждый оптимизирует своё.'],
-['des',21,'Проблемы легче предупредить, чем исправить','Про технический долг и рефакторинг: недопроектирование ведёт к переделкам, избыточное проектирование съедает время. Баланс даёт лучший результат.'],
-['des',22,'Проблемы многих систем скрываются в интерфейсах','Стыки между модулями, системами и человеком — самое уязвимое место. Отдельно: проверка входных данных.'],
-
-['pm',23,'При планировании работ нужно учитывать разногласия','Переключения между задачами, потерянное состояние потока, совещания. Эффективных часов в дне сильно меньше восьми, и план обязан это отражать.'],
-['pm',24,'Не давайте оценок наугад','Число, брошенное в коридоре, немедленно превращается в обязательство. За поспешным прогнозом обычно стоит страх неопределённости.'],
-['pm',25,'Айсберги всегда больше, чем кажутся','Видимая часть задачи — не вся задача. Отсюда необходимость резервов времени, особенно в контрактной работе.'],
-['pm',26,'Ваши переговорные позиции будут сильнее при наличии обосновывающих данных','Без цифр спор о сроках — это мнение против авторитета, и авторитет выигрывает. С данными разговор становится предметным.'],
-['pm',27,'Не записывая оценки и не сверяя их с тем, что произошло на самом деле, вы всегда будете строить догадки, а не оценивать','Разница между оценкой и догадкой — наличие обратной связи. Реальные сроки прошлых задач калибруют интуицию.'],
-['pm',28,'Не меняйте оценку в зависимости от того, что хочет услышать получатель','Оценка не становится меньше от недовольства. Цель и оценка — разные вещи; менять можно объём, ресурсы или качество.'],
-['pm',29,'Держитесь подальше от критического пути','Если ваша задача блокирует остальных, любая ваша занятость останавливает проект. Особенно это касается руководителей.'],
-['pm',30,'Задание либо полностью выполнено, либо не выполнено: частичное выполнение не засчитывается','«Готово на 90 %» не говорит ничего о сроке. Отсюда важность общего определения готовности.'],
-['pm',31,'Команде проекта нужна гибкость в отношении хотя бы одного из пяти измерений: масштаба, плана, бюджета, персонала и качества','Пять измерений нельзя зафиксировать одновременно. Договориться о том, что подвижно, лучше заранее — Вигерс делает это диаграммой гибкости.'],
-['pm',32,'Если вы не контролируете риски своего проекта, то они будут контролировать вас','Неучтённый риск не исчезает, а реализуется в худший момент. Управление рисками — поиск ответа до вопроса «и что теперь?».'],
-['pm',33,'Клиент не всегда прав','Часть работы — объяснить, почему требование вредно или невыполнимо. Причём так, чтобы не обесценить точку зрения клиента.'],
-['pm',34,'Мы слишком часто принимаем желаемое за действительное','Делают вид, что срок реален, требования полны, а план выполним. Все это знают и продолжают кивать.'],
-
-['cult',35,'Передача знаний не ведет к проигрышу','Поделившись, вы не теряете. Удержание знаний ради незаменимости вредит команде и в итоге вам самим.'],
-['cult',36,'Как бы сильно на вас ни давили, не берите на себя обязательства, которые не сможете выполнить','Согласие ради спокойствия сегодня оборачивается сорванным сроком и потерянным доверием завтра.'],
-['cult',37,'Не ждите, что без обучения и освоения передовых практик продуктивность повысится как по волшебству','Требовать «быстрее» без изменения того, как работают, бессмысленно. Инструменты без обучения тоже не помогают.'],
-['cult',38,'Люди много говорят о своих правах, но права подразумевают ответственность','У каждой стороны — клиента, разработчика, спонсора, участника автономной команды — есть и то и другое. Односторонний список прав не работает.'],
-['cult',39,'Даже небольшие физические расстояния препятствуют общению и совместной работе','Достаточно другого этажа, чтобы люди перестали разговаривать. Распределённые команды — крайняя форма этой проблемы.'],
-['cult',40,'Неформальные подходы, используемые небольшими сплоченными командами, плохо масштабируются','То, что работает впятером, разваливается на пятидесяти: нужны процессы, инструменты и специализация.'],
-['cult',41,'Не стоит недооценивать сложность изменения культуры организации по мере перехода к новым методам работы','Практики внедряются быстро, ценности и поведение — нет. Настоящий переход — это интернализация, а не соблюдение регламента.'],
-['cult',42,'Никакие инженерные или управленческие приемы не дадут эффекта, если вы имеете дело с неразумными людьми','Ни одна практика не чинит человека, который не хочет договариваться. Это проблема другого класса.'],
-
-['qa',43,'Решая вопрос о качестве программного обеспечения, вы можете выбирать: платить немало сейчас или позже, но еще больше','Стоимость исправления растёт с каждым этапом, а поздние дефекты ещё и труднее найти. Дешевле всего — не внести.'],
-['qa',44,'Высокое качество естественным образом ведет к повышению продуктивности','История двух команд: одна экономила на проектировании и тушила пожары, другая сделала надёжно. Переделки съедают больше, чем качество стоит.'],
-['qa',45,'У организаций никогда нет времени, чтобы правильно создать программное обеспечение, но они находят ресурсы, чтобы исправить его позже','На «сделать нормально сразу» времени нет, на исправление в проде — есть, и в любом объёме.'],
-['qa',46,'Остерегайтесь малозаметных разрывов между плохим и хорошим','Разница часто в одном лишнем вопросе, проверке или прогоне тестов. Этот зазор создают спешка и невнимание к деталям.'],
-['qa',47,'Никогда не поддавайтесь уговорам руководителя или клиента сделать работу наспех','Давление сроков — не индульгенция. Здесь же про негласную профессиональную этику и обход процессов.'],
-['qa',48,'Стремитесь к тому, чтобы дефект нашли коллеги, а не покупатели','Ревью ловит то, что тесты не увидят, и стоит на порядок дешевле. Побочный эффект — рост общей культуры в команде.'],
-['qa',49,'Разработчики программного обеспечения любят инструменты, но дурак с инструментами — это вооруженный дурак','Инструмент — не процесс. Плохой процесс он лишь ускоряет и масштабирует.'],
-['qa',50,'Сегодняшний проект, требующий немедленной реализации, завтра может превратиться в кошмар для службы сопровождения','Технический долг бывает осознанным решением, но остаётся долгом. Сэкономленные недели возвращаются годами сопровождения.'],
-
-['proc',51,'Остерегайтесь «менеджмента по Businessweek»','Сначала проблема, потом решение, а не наоборот. Мода на методологию — не диагноз, а поиск первопричины — уже лечение.'],
-['proc',52,'Не спрашивайте: «Что это даст мне?» Спрашивайте: «Что это даст нам?»','Изменения оценивают по выгоде для команды. Личная выгода — плохой критерий и ещё худший аргумент.'],
-['proc',53,'Боль — лучшая мотивация для изменения методов работы','Люди меняют привычки, когда текущий способ реально мешает. Абстрактная польза не двигает никого; сложнее всего с болью, которую перестали замечать.'],
-['proc',54,'Внедряя новые методы работы, делайте это мягко, но непрерывно','Не рывком и не приказом, а постоянным несильным нажимом в одну сторону. Отдельно — про управление собственным начальством.'],
-['proc',55,'У вас нет времени, чтобы совершить все ошибки, сделанные до вас','Чужой опыт доступен бесплатно: книги, доклады, коллеги. Кривая обучения — то, что можно сделать положе.'],
-['proc',56,'Здравый смысл и опыт иногда важнее определенного процесса','Процесс — средство, а не цель. Там, где буква регламента вредит результату, побеждает суждение. Но и категоричность здесь вредна.'],
-['proc',57,'Адаптируйте готовые шаблоны документов','Шаблон подгоняют под проект, а не проект растягивают под шаблон. Пустые разделы «для галочки» обесценивают документ.'],
-['proc',58,'Если не тратить время на учебу и совершенствование, то не стоит ждать, что следующий проект будет реализован лучше предыдущего','Ретроспектива имеет смысл, только если после неё что-то происходит. Главное — не структура встречи, а то, что за ней следует.'],
-['proc',59,'Самая удручающая закономерность в индустрии программного обеспечения — повторение одних и тех же неэффективных действий снова и снова','Если практика не даёт результата третий проект подряд, проблема не в исполнении, а в самой практике.'],
-
-['gen',60,'Невозможно изменить все сразу','Выберите немного изменений с наибольшей отдачей, сверьтесь с реальностью и доведите их до привычки. Потом беритесь за следующие.']
-];
-
-const main=document.getElementById('main'), chipsBox=document.getElementById('chips'),
-      empty=document.getElementById('empty'), q=document.getElementById('q');
-let active='all';
-
-CATS.forEach(c=>{
-  const s=document.createElement('section');
-  s.className='sect'; s.dataset.cat=c.id;
-  s.innerHTML=`<div class="sect-head"><h2>${c.name}</h2><span class="range">${c.range}</span></div>
-    <div class="intro" style="--hue:${c.hue}"><h4>О чём глава</h4>${c.intro.map(p=>`<p>${p}</p>`).join('')}</div>
-    <div class="grid"></div>`;
-  const grid=s.querySelector('.grid');
-  L.filter(l=>l[0]===c.id).forEach(l=>{
-    const card=document.createElement('article');
-    card.className='card';
-    card.dataset.text=(l[2]+' '+l[3]).toLowerCase();
-    card.innerHTML=`<span class="pearl" style="--hue:${c.hue}">${l[1]}</span>
-      <h3>${l[2]}</h3><p>${l[3]}</p>`;
-    grid.appendChild(card);
-  });
-  main.appendChild(s);
-});
-
-function makeChip(id,label,hue){
-  const b=document.createElement('button');
-  b.className='chip'; b.type='button'; b.dataset.cat=id;
-  b.setAttribute('aria-pressed', id===active);
-  b.innerHTML = hue ? `<span class="dot" style="color:${hue}"></span>${label}` : label;
-  b.addEventListener('click',()=>{active=id;apply();});
-  chipsBox.appendChild(b);
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"Жемчужины разработки — конспект",
+  "inLanguage":"ru",
+  "about":{
+    "@type":"Book",
+    "name":"Жемчужины разработки. Чему мы научились за 50 лет создания ПО",
+    "author":{"@type":"Person","name":"Карл Вигерс"},
+    "isbn":"978-5-4461-1986-8",
+    "publisher":{"@type":"Organization","name":"Питер"},
+    "datePublished":"2024",
+    "workTranslation":{"@type":"Book","name":"Software Development Pearls","datePublished":"2021"}
+  }
 }
-makeChip('all','Все 60',null);
-CATS.forEach(c=>makeChip(c.id,c.name,c.hue));
-
-function apply(){
-  const term=q.value.trim().toLowerCase();
-  let shown=0;
-  document.querySelectorAll('.sect').forEach(s=>{
-    const catOk = active==='all' || active===s.dataset.cat;
-    let n=0;
-    s.querySelectorAll('.card').forEach(card=>{
-      const ok = catOk && (!term || card.dataset.text.includes(term));
-      card.hidden=!ok; if(ok) n++;
-    });
-    s.hidden = n===0;
-    const intro=s.querySelector('.intro');
-    if(intro) intro.hidden = !!term;
-    shown+=n;
-  });
-  document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed', b.dataset.cat===active));
-  empty.hidden = shown>0;
-  onScroll();
-}
-
-/* Полоса прочитанного и кнопка «наверх». Оба считаются от прокручиваемой
-   высоты, а она меняется при фильтрации, — поэтому onScroll зовётся и из apply. */
-const toTop=document.getElementById('totop'), bar=document.getElementById('progress');
-function onScroll(){
-  const scrollable=document.documentElement.scrollHeight-innerHeight;
-  const read = scrollable>0 ? Math.min(scrollY/scrollable,1) : 0;
-  bar.style.transform=`scaleX(${read})`;
-  toTop.classList.toggle('on', scrollable>240 && scrollY>scrollable/2);
-}
-addEventListener('scroll',onScroll,{passive:true});
-addEventListener('resize',onScroll);
-toTop.addEventListener('click',()=>{
-  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  scrollTo({top:0,behavior:reduce?'auto':'smooth'});
-});
-
-q.addEventListener('input',apply);
-apply();
 </script>
 </body>
 </html>
