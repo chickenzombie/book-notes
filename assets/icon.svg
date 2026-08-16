@@ -1,9 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Полка конспектов">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Book Notes">
+  <!-- Собрано `bash tools/bn-icon.sh` из assets/fonts/unbounded-800-latin.woff2, ось wght=800.
+       Правьте скрипт, а не этот файл. Градиент лежит на прямоугольнике
+       и подрезается буквами — иначе радуга повторялась бы в каждой. -->
+  <defs>
+    <linearGradient id="bn" gradientUnits="userSpaceOnUse"
+                    x1="3.32" y1="13.76" x2="28.68" y2="18.24">
+      <stop offset="0" stop-color="#2A3550"/>
+      <stop offset="0.18" stop-color="#6E8FE0"/>
+      <stop offset="0.34" stop-color="#47B7A4"/>
+      <stop offset="0.5" stop-color="#D9A03C"/>
+      <stop offset="0.66" stop-color="#B76FB0"/>
+      <stop offset="0.82" stop-color="#8878D2"/>
+      <stop offset="1" stop-color="#2A3550"/>
+    </linearGradient>
+    <clipPath id="bn-letters">
+      <path transform="translate(3.23 21.21) scale(0.01390 -0.01390)" d="M708 396Q732 390 752 381Q809 357 837 314Q865 271 865 213Q865 152 838 104Q810 55 754 28Q698 0 615 0H44L101 385L44 750H594Q698 750 756 702Q815 653 815 567Q815 519 794 476Q772 433 722 404Q716 400 708 396ZM288 158H546Q585 158 607 178Q629 197 629 232Q629 265 606 286Q583 308 539 308H311ZM506 462Q537 462 558 481Q579 500 579 531Q579 557 560 574Q542 592 508 592H289L310 462Z"/>
+      <path transform="translate(3.23 21.21) scale(0.01390 -0.01390)" d="M1568 265V750H1794V0H1502L1165 499V0H940V750H1241Z"/>
+    </clipPath>
+  </defs>
   <rect width="32" height="32" rx="7" fill="#EDEFF3"/>
-  <g>
-    <rect x="6"  y="8"  width="4.6" height="16" rx="1.4" fill="#6E8FE0"/>
-    <rect x="12" y="11" width="4.6" height="13" rx="1.4" fill="#47B7A4"/>
-    <rect x="18" y="6"  width="4.6" height="18" rx="1.4" fill="#B76FB0"/>
-  </g>
-  <rect x="5" y="25" width="22" height="2.2" rx="1.1" fill="#2A3550"/>
+  <rect width="32" height="32" fill="url(#bn)" clip-path="url(#bn-letters)"/>
 </svg>
