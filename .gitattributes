@@ -4,4 +4,5 @@
 # Двоичное — не текст: правку концов строк здесь git превратил бы в порчу файла
 *.woff2 binary
 *.png   binary
+*.jpg   binary
 *.ico   binary
