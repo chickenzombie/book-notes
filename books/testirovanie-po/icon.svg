@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Тестирование ПО. Базовый курс">
+  <!-- Страница учебника с полем и пронумерованными пунктами: сквозная
+       нумерация до четвёртого уровня — подпись этой книги. -->
+  <rect width="32" height="32" rx="7" fill="#F3EFE7"/>
+  <rect x="9.5" y="6" width="13" height="20" rx="1.5" fill="#FBF9F5" stroke="#D8D0C1" stroke-width="1"/>
+  <line x1="13" y1="6" x2="13" y2="26" stroke="#9A6B1E" stroke-width="1"/>
+  <rect x="15" y="10" width="5.5" height="1.6" rx=".8" fill="#B4762A"/>
+  <rect x="15" y="14" width="5.5" height="1.6" rx=".8" fill="#4A7A4E"/>
+  <rect x="15" y="18" width="5.5" height="1.6" rx=".8" fill="#8C4A5E"/>
+  <rect x="15" y="22" width="3.2" height="1.6" rx=".8" fill="#3F6E7E"/>
+</svg>

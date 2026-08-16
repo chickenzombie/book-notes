@@ -32,7 +32,7 @@ if [ ! -x "$VENV/bin/python" ]; then
 fi
 
 SRC="$SRC" SLUG="$SLUG" "$VENV/bin/python" - <<'PY'
-import os, re, sys, unicodedata
+import collections, os, re, sys, unicodedata
 import pymupdf
 
 src = os.environ["SRC"]
@@ -59,14 +59,68 @@ def strip_header(text, pageno):
         return rest
     return text
 
+# Колонтитулы у книг устроены по-разному, одного правила не хватает.
+# Правило выше — про номер страницы в шапке. Ещё два опираются не на вид
+# строки, а на её повторяемость, и потому работают на незнакомой вёрстке.
+def norm(line):
+    return re.sub(r"\d+", "#", " ".join(line.split()))
+
+def edges(text):
+    ls = [l for l in text.split("\n") if l.strip()]
+    return (ls[0], ls[-1]) if ls else (None, None)
+
+pages = [doc[p].get_text("text", sort=True) for p in range(doc.page_count)]
+firsts, lasts = zip(*(edges(t) for t in pages)) if pages else ((), ())
+
+# Подвал одинаков на всей книге, меняется только номер страницы — ловим по
+# частоте. Порог с запасом: у вклеек и разворотов подвала может не быть.
+counts = collections.Counter(norm(l) for l in lasts if l)
+FOOTERS = {form for form, n in counts.items() if n >= doc.page_count * 0.4}
+
+# Дефис в конце строки бывает двух родов: перенос по слогам («тести-\nрование»)
+# и настоящий дефис составного слова, которому не повезло с шириной колонки
+# («веб-\nсервисы»). Склеивать их надо по-разному, а по виду они одинаковы.
+# Различаем по самой книге: собираем пары, встреченные с дефисом посреди
+# строки, — там ширина колонки ни при чём, значит дефис настоящий.
+HYPHENATED = {(m.group(1).lower(), m.group(2).lower())
+              for t in pages for m in re.finditer(r"(\w+)-(\w+)", t)}
+
+# Шапка — название текущего раздела: от раздела к разделу меняется, но на
+# соседних страницах повторяется. Отсюда правило: первая строка, совпадающая
+# с первой строкой соседней страницы, — колонтитул, а не текст книги.
+def running_head(i):
+    if not firsts[i]:
+        return False
+    here = norm(firsts[i])
+    return any(0 <= j < len(firsts) and firsts[j] and norm(firsts[j]) == here
+               for j in (i - 1, i + 1))
+
+def strip_furniture(text, i):
+    text = strip_header(text, i + 1)
+    lines = text.split("\n")
+    top = next((k for k, l in enumerate(lines) if l.strip()), None)
+    if top is not None and running_head(i):
+        del lines[top]
+    bottom = next((k for k in range(len(lines) - 1, -1, -1) if lines[k].strip()), None)
+    if bottom is not None and norm(lines[bottom]) in FOOTERS:
+        del lines[bottom]
+    return "\n".join(lines)
+
 def clean(text):
     text = unicodedata.normalize("NFKC", text)
     # Вёрстка переносит слова мягким дефисом U+00AD. Его надо убрать вместе
     # с концом строки и до того, как строки склеятся, иначе в тексте
     # останется «лю<U+00AD> бого» вместо «любого» — таких мест тут пара тысяч.
     text = re.sub(r"­\s*", "", text)
-    # Обычный перенос по слогам: «тести-\nрование» → «тестирование»
-    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+    # Слово, разорванное концом строки. Отступ в начале следующей строки
+    # пропускаем: у Куликова с пробела начинается каждая строка, и без этого
+    # разорванными остаются тысячи слов. Дефис сохраняем, только если книга
+    # где-то пишет эту пару через дефис и посреди строки.
+    def rejoin(m):
+        left, right = m.group(1), m.group(2)
+        dash = "-" if (left.lower(), right.lower()) in HYPHENATED else ""
+        return f"{left}{dash}{right}"
+    text = re.sub(r"(\w+)-\n[ \t]*(\w+)", rejoin, text)
     # Одиночный перенос внутри абзаца — это ширина колонки, а не конец мысли
     text = re.sub(r"(?<![.!?:;»\n])\n(?![\n\s•\t])", " ", text)
     text = re.sub(r"[ \t]+", " ", text)
@@ -89,8 +143,33 @@ for lvl, title, page in toc:
     marks.append((title, page))
 marks.sort(key=lambda m: m[1])
 
+# Закладок в PDF может не быть вовсе — так у Куликова, где оглавление
+# набрано обычным текстом. Тогда границы берём из marks.txt рядом с книгой.
+marks_path = os.path.join("draft", slug, "marks.txt")
 if not marks:
-    sys.exit("в PDF нет оглавления — режьте по страницам вручную")
+    if not os.path.exists(marks_path):
+        os.makedirs(os.path.dirname(marks_path), exist_ok=True)
+        with open(marks_path, "w", encoding="utf-8") as f:
+            f.write(
+                "# Границы разделов: по строке на раздел, «<страница> <заголовок>».\n"
+                "# Нужен, когда в PDF нет закладок.\n"
+                "#\n"
+                "# Страница — номер В ФАЙЛЕ, а не напечатанный в книге: из-за обложки\n"
+                "# и титульных листов они обычно расходятся. Сверьте по любой странице,\n"
+                "# прежде чем переносить номера из оглавления.\n")
+        sys.exit(f"в PDF нет закладок — заполните {marks_path} и запустите снова")
+    for line in open(marks_path, encoding="utf-8"):
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        page, _, title = line.partition(" ")
+        if not page.isdigit() or not title.strip():
+            sys.exit(f"{marks_path}: не разобрал строку «{line}»")
+        marks.append((title.strip(), int(page)))
+    marks.sort(key=lambda m: m[1])
+
+if not marks:
+    sys.exit(f"{marks_path} пуст — заполнить границы разделов нечем")
 
 total = 0
 index = []
@@ -99,8 +178,7 @@ for i, (title, page) in enumerate(marks):
     start = page
     parts = []
     for p in range(start - 1, min(end, doc.page_count)):
-        t = doc[p].get_text("text", sort=True)
-        parts.append(strip_header(t, p + 1))
+        parts.append(strip_furniture(pages[p], p))
     body = clean("\n".join(parts))
 
     name = re.sub(r"[^\w]+", "-", title.lower(), flags=re.U).strip("-")[:48]
